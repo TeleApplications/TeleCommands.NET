@@ -1,15 +1,15 @@
 ﻿
 namespace TeleCommands.NET.CommandOption
 {
-    internal readonly struct Argument<T, TSource> where T : Option<T, TSource>
+    internal readonly struct Argument<T>
     {
         public char ArgumentCharacter { get; }
-        public Func<T, TSource> ArgumentOption { get; }
+        public Func<T, Task<T>> ArgumentFunction { get; }
 
-        public Argument(char character, Func<T, TSource> argumentOption) 
+        public Argument(char character, Func<T, Task<T>> argumentOption) 
         {
             ArgumentCharacter = character;
-            ArgumentOption = argumentOption;
+            ArgumentFunction = argumentOption;
         }
     }
 }
