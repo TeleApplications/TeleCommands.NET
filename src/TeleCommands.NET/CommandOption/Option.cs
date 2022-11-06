@@ -9,12 +9,18 @@ namespace TeleCommands.NET.CommandOption
 {
     internal class Option<T, TSource> : Factory<T> where T : Option<T, TSource>, new()
     {
-        protected TSource optionResult { get; set; }
+        private static readonly string ErrorMessage =
+            $"Option {nameof(T)} failed";
+
+        protected TSource ?optionResult { get; set; }
 
         public virtual ImmutableArray<Argument<TSource>> Arguments { get; }
 
         public virtual async Task<IResult<TSource>> ExecuteOptionAsync(OptionData data) 
         {
+            if(optionResult is null)
+                return new ErrorResult<TSource>(optionResult, ErrorMessage);
+
             await SetArgumentsAsync(data.Arguments);
             return new SuccesfulResult<TSource>(optionResult);
         }
@@ -22,11 +28,11 @@ namespace TeleCommands.NET.CommandOption
         private async Task SetArgumentsAsync(ReadOnlyMemory<char> arguments)
         {
             Argument<TSource>[] currentArguments = Arguments.ToArray();
-            for (int i = 0; i < currentArguments.Length; i++) 
+            for (int i = 0; i < arguments.Length; i++) 
             {
-                char currentSymbol = currentArguments[i].ArgumentCharacter;
+                char currentSymbol = arguments.Span[i];
                 if (TryGetArgument(out Argument<TSource> resultArgument, currentSymbol, currentArguments))
-                    optionResult = await resultArgument.ArgumentFunction.Invoke(optionResult);
+                    optionResult = await resultArgument.ArgumentFunction.Invoke(optionResult!);
             }
         }
 
