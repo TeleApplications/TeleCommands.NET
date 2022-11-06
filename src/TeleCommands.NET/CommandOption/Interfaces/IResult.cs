@@ -1,7 +1,7 @@
 ﻿
 namespace TeleCommands.NET.CommandOption.Interfaces
 {
-    internal interface IResult<T>
+    public interface IResult<T>
     {
         public T Value { get; }
 

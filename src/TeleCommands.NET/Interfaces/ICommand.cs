@@ -1,10 +1,12 @@
-﻿
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
+using TeleCommands.NET.CommandOption.OptionStructs;
 
 namespace TeleCommands.NET.Interfaces
 {
-    internal interface ICommand<T>
+    public interface ICommand<T>
     {
-        public ImmutableArray<Option<>>
+        public ImmutableArray<IOption<T>> Options { get; }
+
+        public Task ExecuteCommandAsync(ReadOnlyMemory<OptionData> optionData);
     }
 }

@@ -1,7 +1,7 @@
 ﻿
 namespace TeleCommands.NET
 {
-    internal abstract class Factory<T> where T : Factory<T>, new()
+    public abstract class Factory<T> where T : Factory<T>, new()
     {
         private readonly static T currentInstance = new();
 

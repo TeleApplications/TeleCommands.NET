@@ -2,7 +2,7 @@
 
 namespace TeleCommands.NET.CommandOption.Results
 {
-    internal sealed class ErrorResult<T> : IResult<T>
+    public sealed class ErrorResult<T> : IResult<T>
     {
         public T Value { get; }
         public string Message { get; }
