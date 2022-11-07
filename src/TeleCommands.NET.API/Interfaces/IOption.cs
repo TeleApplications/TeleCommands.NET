@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using TeleCommands.NET.CommandOption;
+﻿using TeleCommands.NET.CommandOption;
 using TeleCommands.NET.CommandOption.Interfaces;
 using TeleCommands.NET.CommandOption.OptionStructs;
 

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\TeleCommands.NET\TeleCommands.NET.csproj" />
+    <ProjectReference Include="..\..\TeleCommands.NET\TeleCommands.NET.API.csproj" />
   </ItemGroup>
 
 </Project>

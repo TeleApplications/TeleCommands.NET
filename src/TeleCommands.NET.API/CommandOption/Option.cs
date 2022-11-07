@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using TeleCommands.NET.CommandOption.Interfaces;
 using TeleCommands.NET.CommandOption.OptionStructs;
@@ -13,7 +12,6 @@ namespace TeleCommands.NET.CommandOption
     {
         private static readonly string ErrorMessage =
             $"Option {nameof(T)} failed";
-
         protected TSource ?optionResult { get; set; }
 
         public virtual ReadOnlyMemory<Argument> Arguments { get; }

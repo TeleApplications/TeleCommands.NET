@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32519.111
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeleCommands.NET", "TeleCommands.NET.csproj", "{C154D278-55C8-4DAF-B1D4-E69BF8F267A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeleCommands.NET.API", "TeleCommands.NET.API.csproj", "{C154D278-55C8-4DAF-B1D4-E69BF8F267A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleCommands.NET.Example", "..\TeleCommands.NET.Example\TeleCommands.NET.Example\TeleCommands.NET.Example.csproj", "{7A27BDEF-1387-4718-AB54-1B79BD53C104}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeleCommands.NET.Example", "..\TeleCommands.NET.Example\TeleCommands.NET.Example\TeleCommands.NET.Example.csproj", "{7A27BDEF-1387-4718-AB54-1B79BD53C104}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleCommands.NET", "..\TeleCommands.NET\TeleCommands.NET.csproj", "{BA850F47-1846-4B99-BA18-10A5BA0E7A79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7A27BDEF-1387-4718-AB54-1B79BD53C104}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A27BDEF-1387-4718-AB54-1B79BD53C104}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A27BDEF-1387-4718-AB54-1B79BD53C104}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA850F47-1846-4B99-BA18-10A5BA0E7A79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA850F47-1846-4B99-BA18-10A5BA0E7A79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA850F47-1846-4B99-BA18-10A5BA0E7A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA850F47-1846-4B99-BA18-10A5BA0E7A79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

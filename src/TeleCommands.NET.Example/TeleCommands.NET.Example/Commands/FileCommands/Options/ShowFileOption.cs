@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using TeleCommands.NET.CommandOption;
+﻿using TeleCommands.NET.CommandOption;
 using TeleCommands.NET.CommandOption.Interfaces;
 using TeleCommands.NET.CommandOption.OptionStructs;
 using TeleCommands.NET.CommandOption.Results;
@@ -13,7 +12,7 @@ namespace TeleCommands.NET.Example.Commands.FileCommands.Options
         public override ReadOnlyMemory<Argument> Arguments =>
             new Argument[]
             {
-                new Argument('l', async() =>
+                new Argument("lines", async() =>
                 {
                     var lines = await File.ReadAllLinesAsync(filePath!);
 
@@ -22,7 +21,7 @@ namespace TeleCommands.NET.Example.Commands.FileCommands.Options
                         Console.WriteLine(lines[i]);
                     }
                 }),
-                new Argument('b', async() =>
+                new Argument("bytes", async() =>
                 {
                     var lines = await File.ReadAllBytesAsync(filePath!);
 

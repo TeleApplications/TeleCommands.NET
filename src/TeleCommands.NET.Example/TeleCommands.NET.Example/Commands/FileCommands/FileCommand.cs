@@ -15,7 +15,7 @@ namespace TeleCommands.NET.Example.Commands.FileCommands
                 (IOption<bool>)ShowFileOption.FactoryValue
             );
 
-        public async Task ExecuteCommandAsync(ReadOnlyMemory<OptionData> optionData) 
+        public async Task ExecuteCommandAsync(ReadOnlyMemory<OptionData> optionData)
         {
             var currentOptionData = optionData.Span[0];
             await Options[0].ExecuteOptionAsync(currentOptionData);
