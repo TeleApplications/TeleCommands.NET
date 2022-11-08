@@ -1,5 +1,4 @@
-﻿
-namespace TeleCommands.NET
+﻿namespace TeleCommands.NET
 {
     public abstract class Factory<T> where T : Factory<T>, new()
     {

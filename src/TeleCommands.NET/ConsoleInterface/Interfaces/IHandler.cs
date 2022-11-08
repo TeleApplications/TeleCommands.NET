@@ -1,5 +1,4 @@
-﻿
-namespace TeleCommands.NET.Console.Interfaces
+﻿namespace TeleCommands.NET.ConsoleInterface.Interfaces
 {
     public interface IHandler
     {

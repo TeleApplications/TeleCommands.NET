@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace TeleCommands.NET.Console
+namespace TeleCommands.NET.ConsoleInterface
 {
     internal delegate uint HookProc(int code, uint wParam, uint lParam);
     internal static class InteropHelper

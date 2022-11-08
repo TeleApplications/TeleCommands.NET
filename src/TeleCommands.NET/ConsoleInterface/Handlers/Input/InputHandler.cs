@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using TeleCommands.NET.Console.Interfaces;
+using TeleCommands.NET.ConsoleInterface.Interfaces;
 
-namespace TeleCommands.NET.Console.Handlers.Input
+namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 {
     public abstract class InputHandler : IHandler
     {

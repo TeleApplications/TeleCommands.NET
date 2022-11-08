@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
-using TeleCommands.NET.Console.Handlers.Input;
-using TeleCommands.NET.Console.Interfaces;
-using TeleCommands.NET.Console.Structs;
+using TeleCommands.NET.ConsoleInterface.Handlers.Input;
+using TeleCommands.NET.ConsoleInterface.Interfaces;
+using TeleCommands.NET.ConsoleInterface.Structs;
 
-namespace TeleCommands.NET.Console
+namespace TeleCommands.NET.ConsoleInterface
 {
     internal sealed class CommandReader : IHandler, IDisposable
     {

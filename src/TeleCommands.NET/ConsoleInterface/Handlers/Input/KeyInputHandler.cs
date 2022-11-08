@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using TeleCommands.NET.Console.Structs;
+using TeleCommands.NET.ConsoleInterface.Structs;
 
-namespace TeleCommands.NET.Console.Handlers.Input
+namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 {
     public sealed class KeyInputHandler : InputHandler
     {

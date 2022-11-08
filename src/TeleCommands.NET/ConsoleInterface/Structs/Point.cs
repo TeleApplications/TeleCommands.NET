@@ -1,5 +1,4 @@
-﻿
-namespace TeleCommands.NET.Console.Structs
+﻿namespace TeleCommands.NET.ConsoleInterface.Structs
 {
     internal readonly struct Point
     {

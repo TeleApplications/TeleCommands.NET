@@ -1,5 +1,4 @@
-﻿
-namespace TeleCommands.NET.CommandOption.Interfaces
+﻿namespace TeleCommands.NET.CommandOption.Interfaces
 {
     public interface IResult<T>
     {
