@@ -2,6 +2,8 @@
 {
     public readonly struct Argument
     {
+        public static readonly char ArgumentSeparator = '-';
+
         public string ArgumentName { get; }
         public Func<Task> ArgumentAction { get; }
 

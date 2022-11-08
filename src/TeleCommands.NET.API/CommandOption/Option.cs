@@ -28,7 +28,14 @@ namespace TeleCommands.NET.CommandOption
         private async Task SetArgumentsAsync(ReadOnlyMemory<char> arguments)
         {
             var currentArguments = Arguments.ToArray();
-            for (int i = 0; i < arguments.Length; i++) 
+            if (arguments.Span[1] == Argument.ArgumentSeparator) 
+            {
+                if (TryGetArgument(out Argument resultArgument, arguments.Span[2], currentArguments))
+                    await resultArgument.ArgumentAction.Invoke();
+                return;
+            }
+
+            for (int i = 1; i < arguments.Length; i++) 
             {
                 char currentSymbol = arguments.Span[i];
                 if (TryGetArgument(out Argument resultArgument, currentSymbol, currentArguments))
@@ -36,16 +43,16 @@ namespace TeleCommands.NET.CommandOption
             }
         }
 
-        private bool TryGetArgument([NotNullWhen(true)] out Argument argument, char argumentSymbol, ReadOnlyMemory<Argument> arguments) 
+        private bool TryGetArgument([NotNullWhen(true)] out Argument argument, char argumentName, ReadOnlyMemory<Argument> arguments) 
         {
-            var vectorSymbol = new Vector<char>(argumentSymbol);
+            var vectorSymbol = new Vector<char>(argumentName);
             var vectorSize = Vector<char>.Count;
 
             int difference = arguments.Length - vectorSize;
             for (int i = 0; i < difference; i+=vectorSize)
             {
                 var currentArgument = arguments.Span[i];
-                var currentSymbol = new Vector<char>(currentArgument.ArgumentCharacter);
+                var currentSymbol = new Vector<char>(currentArgument.ArgumentName[0]);
 
                 if (Vector.EqualsAll(vectorSymbol, currentSymbol)) 
                 {
@@ -58,7 +65,7 @@ namespace TeleCommands.NET.CommandOption
             for (int j = startIndex; j < arguments.Length; j++)
             {
                 var currentArgument = arguments.Span[j];
-                if (argumentSymbol == currentArgument.ArgumentCharacter) 
+                if (argumentName == currentArgument.ArgumentName[0])
                 {
                     argument = currentArgument;
                     return true;
