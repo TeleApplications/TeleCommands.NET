@@ -7,21 +7,21 @@ namespace TeleCommands.NET.ConsoleInterface
 {
     internal sealed class CommandReader : IHandler, IDisposable
     {
-        private ReadOnlyMemory<KeyAction> keyActions =>
-            new KeyAction[]
+        private ReadOnlyMemory<KeyAction<CommandData>> keyActions =
+            new KeyAction<CommandData>[]
             {
-                new KeyAction(ConsoleKey.Spacebar, async() => 
+                new KeyAction<CommandData>(ConsoleKey.Spacebar, async(CommandData data) => 
                 {
-                    if(commandData.CommandName is null)
+                    if(data.CommandName is null)
                     {
-                        int index = commandData.OptionsData.Index;
-                        commandData.CommandName = (commandData.OptionsData.Memory[0..(index + 1)]).ToString();
-                        commandData.OptionsData.Index = 0;
+                        int index = data.OptionsData.Index;
+                        data.CommandName = (data.OptionsData.Memory[0..(index + 1)]).ToString();
+                        data.OptionsData.Index = 0;
                     }
                 })
             };
 
-        private KeyInputHandler inputHandler;
+        private KeyInputHandler<CommandData> inputHandler;
         private CommandData commandData;
 
         public bool IsListening { get; set; }
@@ -29,7 +29,7 @@ namespace TeleCommands.NET.ConsoleInterface
 
         public CommandReader(Process process, int maxCommandLength)
         {
-            inputHandler = new(process);
+            inputHandler = new(process, commandData);
             inputHandler.KeyActions = keyActions;
             Handle = inputHandler.Handle;
 
