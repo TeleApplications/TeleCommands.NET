@@ -1,6 +1,6 @@
 ﻿using TeleCommands.NET.ConsoleInterface.Structs;
 
-namespace TeleCommands.NET
+namespace TeleCommands.NET.Command.DataStructures
 {
     internal struct CommandData
     {
