@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using TeleCommands.NET.API.CommandOption.OptionStructs;
 using TeleCommands.NET.CommandOption.Interfaces;
 using TeleCommands.NET.CommandOption.OptionStructs;
 using TeleCommands.NET.CommandOption.Results;
@@ -14,6 +15,7 @@ namespace TeleCommands.NET.CommandOption
             $"Option {nameof(T)} failed";
         protected TSource ?optionResult { get; set; }
 
+        public virtual OptionBarrier CharacterBarrier { get; } = OptionBarrier.Empty;
         public virtual ReadOnlyMemory<Argument> Arguments { get; }
 
         public virtual async Task<IResult<TSource>> ExecuteOptionAsync(OptionData data) 

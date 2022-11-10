@@ -1,6 +1,6 @@
 ﻿namespace TeleCommands.NET.ConsoleInterface.Structs
 {
-    internal sealed class IndexMemory<T>
+    public sealed class IndexMemory<T>
     {
         public Memory<T> Memory { get; set; }
         public int Index { get; set; }
