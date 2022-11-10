@@ -4,7 +4,7 @@ An abstract command library with versatile abstraction for creating new commands
 ---
 ## TODO
 - [ ] Support for multiple commands in one line <--- Currently in a development
-- [ ] Proper documentation in a code and with at least 5 examples
+- [ ] Proper documentation in a code with at least 5 examples
 - [ ] Reasonable error message structure
 
 ### Informations
