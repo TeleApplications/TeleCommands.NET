@@ -30,7 +30,9 @@ namespace TeleCommands.NET.CommandOption
         private async Task SetArgumentsAsync(ReadOnlyMemory<char> arguments)
         {
             var currentArguments = Arguments.ToArray();
-            if (arguments.Span[1] == Argument.ArgumentSeparator) 
+            int separatorDifference = (byte)arguments.Span[0] & (byte)arguments.Span[1];
+
+            if (separatorDifference == Argument.ArgumentSeparator) 
             {
                 if (TryGetArgument(out Argument resultArgument, arguments.Span[2], currentArguments))
                     await resultArgument.ArgumentAction.Invoke();

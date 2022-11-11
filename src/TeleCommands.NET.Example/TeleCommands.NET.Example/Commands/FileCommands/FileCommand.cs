@@ -6,7 +6,7 @@ using TeleCommands.NET.Interfaces;
 
 namespace TeleCommands.NET.Example.Commands.FileCommands
 {
-    [Command("file")]
+    [Command("file", typeof(FileCommand))]
     internal sealed class FileCommand : ICommand<bool>
     {
         public ImmutableArray<IOption<bool>> Options { get; } =

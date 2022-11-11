@@ -1,2 +1,5 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using System.Diagnostics;
+using TeleCommands.NET.Command;
+
+var commandReader = new CommandReader(Process.GetCurrentProcess(), 128);
+await commandReader.StartListeningAsync();

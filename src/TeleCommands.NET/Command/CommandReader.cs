@@ -6,7 +6,7 @@ using TeleCommands.NET.ConsoleInterface.Structs;
 
 namespace TeleCommands.NET.Command
 {
-    internal sealed class CommandReader : IHandler, IDisposable
+    public sealed class CommandReader : IHandler, IDisposable
     {
         private ReadOnlyMemory<KeyAction<CommandData>> keyActions =
             new KeyAction<CommandData>[]
@@ -19,40 +19,48 @@ namespace TeleCommands.NET.Command
                         data.CommandName = data.OptionsData.Memory[0..(index + 1)].ToString();
                         data.OptionsData.Index = 0;
                     }
+                }),
+                new KeyAction<CommandData>(ConsoleKey.Enter, async(data) =>
+                {
+                    await CommandHelper.RunCommandAsync(data);
+                    data.OptionsData.Index = 0;
                 })
             };
 
         private KeyInputHandler<CommandData> inputHandler;
         private CommandData commandData;
 
-        public bool IsListening { get; set; }
+        public bool IsListening { get; set; } = true;
         public uint Handle { get; }
 
         public CommandReader(Process process, int maxCommandLength)
         {
             inputHandler = new(process, commandData);
             inputHandler.KeyActions = keyActions;
+            CreateHandler();
             Handle = inputHandler.Handle;
 
             commandData = new()
             {
                 OptionsData = new IndexMemory<char>(maxCommandLength)
             };
-            Task.Run(async () => await ListenCommandsAsync());
         }
 
-        private async Task ListenCommandsAsync()
+        public async Task StartListeningAsync()
         {
-            while (IsListening)
+            await Task.Run(() =>
             {
-                byte currentKey = (byte)inputHandler.CurrentPressedKey;
-                if (currentKey != 0)
+                while (IsListening)
                 {
-                    var optionsData = commandData.OptionsData;
-                    optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
-                    optionsData.Index++;
+                    byte currentKey = (byte)inputHandler.CurrentPressedKey;
+                    if (currentKey != 0)
+                    {
+                        var optionsData = commandData.OptionsData;
+                        optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
+                        optionsData.Index++;
+                    }
                 }
-            }
+            });
         }
 
         public void CreateHandler() =>
