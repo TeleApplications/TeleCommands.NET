@@ -1,6 +1,6 @@
 ﻿namespace TeleCommands.NET.ConsoleInterface.Structs
 {
-    internal readonly struct Point
+    public readonly struct Point
     {
         public float X { get; }
         public float Y { get; }

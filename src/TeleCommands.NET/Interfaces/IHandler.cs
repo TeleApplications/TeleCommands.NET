@@ -2,7 +2,7 @@
 {
     public interface IHandler
     {
-        public uint Handle { get; }
+        public IntPtr Handle { get; }
 
         public void CreateHandler();
     }

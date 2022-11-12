@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
 using TeleCommands.NET.ConsoleInterface.Structs;
+using TeleCommands.NET.Structs;
 
 namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 {
@@ -10,7 +10,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
         private const uint WM_KEYDOWN = 0x100;
         private readonly T invokeObject;
 
-        protected override uint InputMessage =>
+        protected override uint InputMessage => 
             WM_KEYDOWN;
 
         public ConsoleKey CurrentPressedKey { get; private set; }
@@ -21,14 +21,15 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
             this.invokeObject = invokeObject;
         }
 
-        protected override void OnHookProc(uint wParam, uint lParam)
+        protected override async Task OnInputMessage(InputRecord inputRecord)
         {
-            var message = Marshal.PtrToStructure<Message>((IntPtr)lParam);
-            CurrentPressedKey = (ConsoleKey)message.LParam;
+            var keyEvent = inputRecord.KeyEvent;
+            int keyCode = (byte)(keyEvent.VirtualScanCode >> 16) & 0x000000ff;
+            if ((keyEvent.ControlKeyState & (uint)ControlKey.LeftShift) != 0)
+                return;
             if (TryGetCurrentKeyAction(out KeyAction<T> action, CurrentPressedKey))
-                Task.Run(async() => await action.Action.Invoke(invokeObject));
+                await action.Action.Invoke(invokeObject);
         }
-
 
         private bool TryGetCurrentKeyAction([NotNullWhen(true)] out KeyAction<T> keyAction, ConsoleKey key) 
         {

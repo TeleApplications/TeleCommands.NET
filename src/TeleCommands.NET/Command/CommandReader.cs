@@ -16,6 +16,7 @@ namespace TeleCommands.NET.Command
                     if(data.CommandName is null)
                     {
                         int index = data.OptionsData.Index;
+
                         data.CommandName = data.OptionsData.Memory[0..(index + 1)].ToString();
                         data.OptionsData.Index = 0;
                     }
@@ -31,7 +32,7 @@ namespace TeleCommands.NET.Command
         private CommandData commandData;
 
         public bool IsListening { get; set; } = true;
-        public uint Handle { get; }
+        public IntPtr Handle { get; }
 
         public CommandReader(Process process, int maxCommandLength)
         {
@@ -53,7 +54,7 @@ namespace TeleCommands.NET.Command
                 while (IsListening)
                 {
                     byte currentKey = (byte)inputHandler.CurrentPressedKey;
-                    if (currentKey != 0)
+                    if (currentKey != 0) 
                     {
                         var optionsData = commandData.OptionsData;
                         optionsData.Memory.Span[optionsData.Index] = (char)currentKey;

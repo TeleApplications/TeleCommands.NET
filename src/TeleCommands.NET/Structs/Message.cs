@@ -1,6 +1,6 @@
 ﻿namespace TeleCommands.NET.ConsoleInterface.Structs
 {
-    internal readonly struct Message
+    public readonly struct Message
     {
         public uint Hwnd { get; }
         public uint CurrentMessage { get; }

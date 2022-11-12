@@ -1,17 +1,19 @@
 ﻿using System.Runtime.InteropServices;
+using TeleCommands.NET.ConsoleInterface.Structs;
+using TeleCommands.NET.Structs;
 
 namespace TeleCommands.NET
 {
-    internal delegate uint HookProc(int code, uint wParam, uint lParam);
-    internal static class InteropHelper
+    internal delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
+    public static class InteropHelper
     {
-        [DllImport("User32.dll")]
-        public static extern uint SetWindowsHookEx(uint hookType, HookProc lpfn, uint hMod, uint dwThreadId);
+        [DllImport("kernel32.dll")]
+        public static extern bool ReadConsoleInputW(IntPtr hConsoleInput, out InputRecord inputRecord, uint length, out uint numberOfRead); 
 
-        [DllImport("User32.dll")]
-        public static extern uint CallNextHookEx(uint hhk, int nCode, uint wParam, uint lParam);
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetStdHandle(int handle);
 
-        [DllImport("Kernel32.dll")]
-        public static extern uint GetModuleHandle(string lpModuleName);
+        [DllImport("kernel32.dll")]
+        public static extern bool SetConsoleMode(IntPtr handle, uint dwMode);
     }
 }

@@ -1,37 +1,40 @@
 ﻿using System.Diagnostics;
 using TeleCommands.NET.ConsoleInterface.Interfaces;
+using TeleCommands.NET.Structs;
 
 namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 {
     public abstract class InputHandler : IHandler
     {
-        private uint inputProc;
-        private uint module;
-
         protected abstract uint InputMessage { get; }
-        public uint Handle { get; }
+
+        public IntPtr Handle { get; set; }
 
         public InputHandler(Process consoleProcess) 
         {
-            if (!consoleProcess.Responding || consoleProcess.MainModule is null)
+            if (!consoleProcess.Responding || consoleProcess.Handle == IntPtr.Zero)
                 throw new Exception($"Current process: {consoleProcess.ProcessName} is not active");
-
-            Handle = (uint)consoleProcess.Handle;
-            string moduleProcessName = consoleProcess.MainModule!.ModuleName!;
-
-            module = InteropHelper.GetModuleHandle(moduleProcessName);
         }
 
-        public void CreateHandler() =>
-            inputProc = InteropHelper.SetWindowsHookEx(13, InputHookProc, module, 0);
+        protected abstract Task OnInputMessage(InputRecord inputRecord);
 
-        private uint InputHookProc(int code, uint wParam, uint lParam) 
+        private async Task ListenMessageAsync() 
         {
-            if (wParam == InputMessage)
-                OnHookProc(wParam, lParam);
-            return InteropHelper.CallNextHookEx(inputProc, code, wParam, lParam);
+            var currentConsoleInput = InteropHelper.GetStdHandle(-10);
+            InteropHelper.SetConsoleMode(currentConsoleInput, 0x0008 | 0x001);
+
+            while (true) 
+            {
+                if (!InteropHelper.ReadConsoleInputW(currentConsoleInput, out InputRecord inputRecord, 2, out uint reads))
+                    throw new Exception("Reading console input is not possible");
+                if(inputRecord.KeyEvent.VirtualKeyCode != 1)
+                    await OnInputMessage(inputRecord);
+            }
         }
 
-        protected abstract void OnHookProc(uint wParam, uint lParam);
+        public void CreateHandler() 
+        {
+            Task.Run(async() => await ListenMessageAsync());
+        }
     }
 }
