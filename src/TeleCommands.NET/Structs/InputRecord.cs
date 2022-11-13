@@ -9,11 +9,12 @@ namespace TeleCommands.NET.Structs
 
     public struct KeyEvent
     {
+        public bool KeyDown { get; set; }
+        public int RepeatCount { get; set; }
         public uint VirtualKeyCode { get; set; }
         public uint VirtualScanCode { get; set; }
         public char Character { get; set; }
-        public bool KeyDown { get; set; }
-        public uint ControlKeyState { get; set; }
+        public int ControlKeyState { get; set; }
     }
 
     public struct InputRecord

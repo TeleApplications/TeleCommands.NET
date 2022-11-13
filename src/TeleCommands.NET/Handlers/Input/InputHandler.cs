@@ -1,40 +1,44 @@
 ﻿using System.Diagnostics;
 using TeleCommands.NET.ConsoleInterface.Interfaces;
-using TeleCommands.NET.Structs;
 
-namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
+namespace TeleCommands.NET.Handlers.Input
 {
-    public abstract class InputHandler : IHandler
+    internal abstract class InputHandler : IHandler, IDisposable
     {
-        protected abstract uint InputMessage { get; }
+        protected const uint UnknownKey = 0x00F;
+        private bool isListening = true;
 
-        public IntPtr Handle { get; set; }
+        public uint CurrentKey { get; private set; }
+        public IntPtr Handle { get; }
 
-        public InputHandler(Process consoleProcess) 
+        public InputHandler(Process process) 
         {
-            if (!consoleProcess.Responding || consoleProcess.Handle == IntPtr.Zero)
-                throw new Exception($"Current process: {consoleProcess.ProcessName} is not active");
+            Handle = process.Handle;
+            process.Disposed += (_, _) 
+                => Dispose();
         }
 
-        protected abstract Task OnInputMessage(InputRecord inputRecord);
+        protected abstract Task OnInputAsync(uint key);
+        protected abstract Task<uint> GetInputAsync();
 
-        private async Task ListenMessageAsync() 
+        private async Task StartReadingInput() 
         {
-            var currentConsoleInput = InteropHelper.GetStdHandle(-10);
-            InteropHelper.SetConsoleMode(currentConsoleInput, 0x0008 | 0x001);
-
-            while (true) 
+            while (isListening) 
             {
-                if (!InteropHelper.ReadConsoleInputW(currentConsoleInput, out InputRecord inputRecord, 2, out uint reads))
-                    throw new Exception("Reading console input is not possible");
-                if(inputRecord.KeyEvent.VirtualKeyCode != 1)
-                    await OnInputMessage(inputRecord);
+                uint currentKey = await GetInputAsync();
+                if (currentKey != UnknownKey) 
+                {
+                    await OnInputAsync(currentKey);
+                    CurrentKey = currentKey;
+                }
             }
         }
 
-        public void CreateHandler() 
+        public void CreateHandler() =>
+            Task.Run(() => StartReadingInput());
+        public void Dispose() 
         {
-            Task.Run(async() => await ListenMessageAsync());
+            isListening = false;
         }
     }
 }

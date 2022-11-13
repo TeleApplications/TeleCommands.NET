@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using TeleCommands.NET.ConsoleInterface.Structs;
 using TeleCommands.NET.Structs;
@@ -16,6 +17,9 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
         public ConsoleKey CurrentPressedKey { get; private set; }
         public ReadOnlyMemory<KeyAction<T>> KeyActions { get; set; }
 
+        private ConcurrentQueue<string> messageQueue = new();
+        private bool isReading = false;
+
         public KeyInputHandler(Process process, T invokeObject) : base(process)
         {
             this.invokeObject = invokeObject;
@@ -24,13 +28,30 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
         protected override async Task OnInputMessage(InputRecord inputRecord)
         {
             var keyEvent = inputRecord.KeyEvent;
-            int keyCode = (byte)(keyEvent.VirtualScanCode >> 16) & 0x000000ff;
-            if ((keyEvent.ControlKeyState & (uint)ControlKey.LeftShift) != 0)
-                return;
-            if (TryGetCurrentKeyAction(out KeyAction<T> action, CurrentPressedKey))
-                await action.Action.Invoke(invokeObject);
+            uint keyCode = (uint)((nint)keyEvent.VirtualKeyCode >> 16) & 0xff;
+
+            char keyCharacter = (char)keyCode;
+            CurrentPressedKey = (ConsoleKey)keyCharacter;
+            Console.WriteLine($"Pressed:{keyCharacter}");
+            //if (TryGetCurrentKeyAction(out KeyAction<T> action, CurrentPressedKey))
+                //await action.Action.Invoke(invokeObject);
         }
 
+        private async Task StartWritingAsync() 
+        {
+            isReading = true;
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (messageQueue.TryPeek(out string? result))
+                    {
+                        Console.WriteLine(result);
+                        messageQueue.TryDequeue(out _);
+                    }
+                }
+            });
+        }
         private bool TryGetCurrentKeyAction([NotNullWhen(true)] out KeyAction<T> keyAction, ConsoleKey key) 
         {
             var currentKeyAction = GetCurrentKeyAction(key);

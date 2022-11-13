@@ -38,7 +38,6 @@ namespace TeleCommands.NET.Command
         {
             inputHandler = new(process, commandData);
             inputHandler.KeyActions = keyActions;
-            CreateHandler();
             Handle = inputHandler.Handle;
 
             commandData = new()
@@ -49,10 +48,11 @@ namespace TeleCommands.NET.Command
 
         public async Task StartListeningAsync()
         {
-            await Task.Run(() =>
+            await Task.Run(async() =>
             {
                 while (IsListening)
                 {
+                    await inputHandler.ListenMessageAsync();
                     byte currentKey = (byte)inputHandler.CurrentPressedKey;
                     if (currentKey != 0) 
                     {
