@@ -3,39 +3,35 @@ using TeleCommands.NET.ConsoleInterface.Interfaces;
 
 namespace TeleCommands.NET.Handlers.Input
 {
-    internal abstract class InputHandler : IHandler, IDisposable
+    public abstract class InputHandler : IHandler, IDisposable
     {
         protected const uint UnknownKey = 0x00F;
         private bool isListening = true;
 
-        public uint CurrentKey { get; private set; }
         public IntPtr Handle { get; }
 
         public InputHandler(Process process) 
         {
             Handle = process.Handle;
-            process.Disposed += (_, _) 
+            process.Disposed += (_, _)
                 => Dispose();
         }
 
         protected abstract Task OnInputAsync(uint key);
-        protected abstract Task<uint> GetInputAsync();
+        protected abstract ValueTask<uint> GetInputAsync();
 
-        private async Task StartReadingInput() 
+        public async Task UpdateAsync() 
         {
-            while (isListening) 
+            if (!isListening)
+                await Task.CompletedTask;
+
+            uint currentKey = await GetInputAsync();
+            if (currentKey != UnknownKey) 
             {
-                uint currentKey = await GetInputAsync();
-                if (currentKey != UnknownKey) 
-                {
-                    await OnInputAsync(currentKey);
-                    CurrentKey = currentKey;
-                }
+                await OnInputAsync(currentKey);
             }
         }
 
-        public void CreateHandler() =>
-            Task.Run(() => StartReadingInput());
         public void Dispose() 
         {
             isListening = false;

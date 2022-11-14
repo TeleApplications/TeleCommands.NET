@@ -1,58 +1,57 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using TeleCommands.NET.ConsoleInterface.Structs;
-using TeleCommands.NET.Structs;
+using TeleCommands.NET.Handlers.Input;
 
 namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 {
     public sealed class KeyInputHandler<T> : InputHandler where T : new()
     {
-        private const uint WM_KEYDOWN = 0x100;
+        private readonly int keyCount = byte.MaxValue + 1;
         private readonly T invokeObject;
 
-        protected override uint InputMessage => 
-            WM_KEYDOWN;
-
-        public ConsoleKey CurrentPressedKey { get; private set; }
+        public uint CurrentPressedKey { get; private set; }
         public ReadOnlyMemory<KeyAction<T>> KeyActions { get; set; }
-
-        private ConcurrentQueue<string> messageQueue = new();
-        private bool isReading = false;
 
         public KeyInputHandler(Process process, T invokeObject) : base(process)
         {
             this.invokeObject = invokeObject;
         }
 
-        protected override async Task OnInputMessage(InputRecord inputRecord)
+        protected override async Task OnInputAsync(uint key)
         {
-            var keyEvent = inputRecord.KeyEvent;
-            uint keyCode = (uint)((nint)keyEvent.VirtualKeyCode >> 16) & 0xff;
-
-            char keyCharacter = (char)keyCode;
-            CurrentPressedKey = (ConsoleKey)keyCharacter;
-            Console.WriteLine($"Pressed:{keyCharacter}");
-            //if (TryGetCurrentKeyAction(out KeyAction<T> action, CurrentPressedKey))
-                //await action.Action.Invoke(invokeObject);
+            if (TryGetCurrentKeyAction(out KeyAction<T> action, key))
+                await action.Action.Invoke(invokeObject);
+            CurrentPressedKey = key;
+            Debug.Write($"{CurrentPressedKey}");
         }
 
-        private async Task StartWritingAsync() 
+        protected override ValueTask<uint> GetInputAsync()
         {
-            isReading = true;
-            await Task.Run(() =>
+            int halfKeyCount = (keyCount) / 2;
+            for (int i = 0; i < halfKeyCount; i++)
             {
-                while (true)
-                {
-                    if (messageQueue.TryPeek(out string? result))
-                    {
-                        Console.WriteLine(result);
-                        messageQueue.TryDequeue(out _);
-                    }
-                }
-            });
+                int firstState = ((InteropHelper.GetAsyncKeyState(i)) * i);
+
+                int lastKey = (keyCount - 1) - i;
+                int lastState = ((InteropHelper.GetAsyncKeyState(lastKey)) * lastKey);
+
+                if ((firstState + lastState) > 0)
+                    return new ValueTask<uint>((uint)((i * CalculateReverseIndex(firstState)) | (lastKey * CalculateReverseIndex(lastState))));
+            }
+            return new ValueTask<uint>(UnknownKey);
         }
-        private bool TryGetCurrentKeyAction([NotNullWhen(true)] out KeyAction<T> keyAction, ConsoleKey key) 
+
+        private int CalculateReverseIndex(int value) 
+        {
+            int indexValue = (value + Math.Abs(value));
+            int currentIndex = indexValue / (1) + ((Math.Abs(indexValue - 1) | 0));
+
+            int deriveValue = (value + ((Math.Abs(currentIndex)) ^ 1));
+
+            return deriveValue;
+        }
+
+        private bool TryGetCurrentKeyAction([NotNullWhen(true)] out KeyAction<T> keyAction, uint key) 
         {
             var currentKeyAction = GetCurrentKeyAction(key);
             keyAction = currentKeyAction;
@@ -60,7 +59,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
             return currentKeyAction.Action is not null;
         }
 
-        private KeyAction<T> GetCurrentKeyAction(ConsoleKey key)
+        private KeyAction<T> GetCurrentKeyAction(uint key)
         {
             byte keyByte = (byte)key;
             int keyActionsLength = KeyActions.Length;

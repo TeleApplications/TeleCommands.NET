@@ -4,6 +4,6 @@
     {
         public IntPtr Handle { get; }
 
-        public void CreateHandler();
+        public Task UpdateAsync();
     }
 }

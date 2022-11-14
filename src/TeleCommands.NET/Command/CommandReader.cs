@@ -28,6 +28,8 @@ namespace TeleCommands.NET.Command
                 })
             };
 
+        //This is temporary solutions due to uncomplemet command
+        //handler manager, that will contain every specific handler
         private KeyInputHandler<CommandData> inputHandler;
         private CommandData commandData;
 
@@ -46,26 +48,18 @@ namespace TeleCommands.NET.Command
             };
         }
 
-        public async Task StartListeningAsync()
+        public async Task UpdateAsync()
         {
-            await Task.Run(async() =>
+            await inputHandler.UpdateAsync();
+            byte currentKey = (byte)inputHandler.CurrentPressedKey;
+            if (currentKey != 0) 
             {
-                while (IsListening)
-                {
-                    await inputHandler.ListenMessageAsync();
-                    byte currentKey = (byte)inputHandler.CurrentPressedKey;
-                    if (currentKey != 0) 
-                    {
-                        var optionsData = commandData.OptionsData;
-                        optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
-                        optionsData.Index++;
-                    }
-                }
-            });
+                var optionsData = commandData.OptionsData;
+                optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
+                optionsData.Index++;
+            }
         }
 
-        public void CreateHandler() =>
-            inputHandler.CreateHandler();
         public void Dispose() =>
             IsListening = false;
     }

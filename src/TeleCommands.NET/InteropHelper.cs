@@ -30,5 +30,8 @@ namespace TeleCommands.NET
 
         [DllImport("kernel32.dll")]
         public static extern bool SetConsoleMode(IntPtr handle, uint dwMode);
+
+        [DllImport("user32.dll")]
+        public static extern int GetAsyncKeyState(int key);
     }
 }
