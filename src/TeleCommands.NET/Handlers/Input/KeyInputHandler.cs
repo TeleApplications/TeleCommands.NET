@@ -22,10 +22,10 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
             if (TryGetCurrentKeyAction(out KeyAction<T> action, key))
                 await action.Action.Invoke(invokeObject);
             CurrentPressedKey = key;
-            Debug.Write($"{CurrentPressedKey}");
+            Console.Write($"{(char)CurrentPressedKey}");
         }
 
-        protected override ValueTask<uint> GetInputAsync()
+        protected override uint GetInputAsync()
         {
             int halfKeyCount = (keyCount) / 2;
             for (int i = 0; i < halfKeyCount; i++)
@@ -36,19 +36,16 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
                 int lastState = ((InteropHelper.GetAsyncKeyState(lastKey)) * lastKey);
 
                 if ((firstState + lastState) > 0)
-                    return new ValueTask<uint>((uint)((i * CalculateReverseIndex(firstState)) | (lastKey * CalculateReverseIndex(lastState))));
+                   return Task.FromResult((uint)((i * CalculatePositiveIndex(firstState)) | (lastKey * CalculatePositiveIndex(lastState))));
             }
-            return new ValueTask<uint>(UnknownKey);
+            return Task.FromResult(UnknownKey);
         }
 
-        private int CalculateReverseIndex(int value) 
+        private int CalculatePositiveIndex(int value)  
         {
             int indexValue = (value + Math.Abs(value));
-            int currentIndex = indexValue / (1) + ((Math.Abs(indexValue - 1) | 0));
-
-            int deriveValue = (value + ((Math.Abs(currentIndex)) ^ 1));
-
-            return deriveValue;
+            int devideValue = 1 + (Math.Abs((indexValue * 1) - 1));
+            return indexValue / devideValue;
         }
 
         private bool TryGetCurrentKeyAction([NotNullWhen(true)] out KeyAction<T> keyAction, uint key) 

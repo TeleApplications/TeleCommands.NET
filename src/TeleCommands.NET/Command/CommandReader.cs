@@ -52,12 +52,12 @@ namespace TeleCommands.NET.Command
         {
             await inputHandler.UpdateAsync();
             byte currentKey = (byte)inputHandler.CurrentPressedKey;
-            if (currentKey != 0) 
-            {
-                var optionsData = commandData.OptionsData;
-                optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
-                optionsData.Index++;
-            }
+            //if (currentKey != 0) 
+            //{
+                //var optionsData = commandData.OptionsData;
+                //optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
+                //optionsData.Index++;
+            //}
         }
 
         public void Dispose() =>

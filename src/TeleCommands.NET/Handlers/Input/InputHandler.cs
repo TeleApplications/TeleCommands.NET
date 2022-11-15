@@ -18,7 +18,7 @@ namespace TeleCommands.NET.Handlers.Input
         }
 
         protected abstract Task OnInputAsync(uint key);
-        protected abstract ValueTask<uint> GetInputAsync();
+        protected abstract Task<uint> GetInputAsync();
 
         public async Task UpdateAsync() 
         {
