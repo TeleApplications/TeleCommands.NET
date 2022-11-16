@@ -11,10 +11,7 @@ namespace TeleCommands.NET
     public static class CommandHelper
     {
         private static ImmutableArray<CommandAttribute> commandAttributes =
-            ImmutableArray.CreateRange
-            (
-                Assembly.GetExecutingAssembly().GetCustomAttributes<CommandAttribute>()
-            );
+            ImmutableArray.CreateRange(GetCommandAttributes(AppDomain.CurrentDomain.GetAssemblies()));
 
         public static async Task RunCommandAsync(CommandData commandData) 
         {
@@ -76,7 +73,7 @@ namespace TeleCommands.NET
         }
 
         //TODO: Create vertorized type of this method
-        private static bool TryGetCommandAttribute(out CommandAttribute attribute, string commandName) 
+        public static bool TryGetCommandAttribute(out CommandAttribute attribute, string commandName) 
         {
             int commandCount = commandAttributes.Length;
             for (int i = 0; i < commandCount; i++)
@@ -91,6 +88,36 @@ namespace TeleCommands.NET
 
             attribute = null!;
             return false;
+        }
+
+        private static IEnumerable<CommandAttribute> GetCommandAttributes(ReadOnlyMemory<Assembly> assemblies) 
+        {
+            var attributesTypes = GetCommandAttributesTypes(assemblies).ToArray();
+
+            for (int i = 0; i < attributesTypes.Length; i++)
+            {
+                var attributes = attributesTypes[i].GetCustomAttributes<CommandAttribute>().ToArray();
+                for (int j = 0; j < attributes.Length; j++)
+                {
+                    yield return attributes[j];
+                }
+            }
+        }
+
+        private static IEnumerable<Type> GetCommandAttributesTypes(ReadOnlyMemory<Assembly> assemblies) 
+        {
+            int assembliesCount = assemblies.Length;
+            for (int i = 0; i < assembliesCount; i++)
+            {
+                var currentAssembly = assemblies.Span[i];
+
+                var assemblyTypes = currentAssembly.GetTypes();
+                for (int j = 0; j < assemblyTypes.Length; j++)
+                {
+                    if (assemblyTypes[j].GetCustomAttributes<CommandAttribute>().ToArray().Length > 0)
+                        yield return assemblyTypes[j];
+                }
+            }
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
+using TeleCommands.NET.Attributes;
 using TeleCommands.NET.Command.DataStructures;
 using TeleCommands.NET.ConsoleInterface.Handlers.Input;
 using TeleCommands.NET.ConsoleInterface.Interfaces;
 using TeleCommands.NET.ConsoleInterface.Structs;
+using TeleCommands.NET.Handlers.Input;
 
 namespace TeleCommands.NET.Command
 {
@@ -17,8 +19,11 @@ namespace TeleCommands.NET.Command
                     {
                         int index = data.OptionsData.Index;
 
-                        data.CommandName = data.OptionsData.Memory[0..(index + 1)].ToString();
+                        data.CommandName = data.OptionsData.Memory[0..(index)].ToString();
                         data.OptionsData.Index = 0;
+
+                        if(CommandHelper.TryGetCommandAttribute(out CommandAttribute commandAttribute, data.CommandName))
+                            Console.WriteLine($"Type: {commandAttribute.Type} Name: {commandAttribute.Name}");
                     }
                 }),
                 new KeyAction<CommandData>(ConsoleKey.Enter, async(data) =>
@@ -38,26 +43,26 @@ namespace TeleCommands.NET.Command
 
         public CommandReader(Process process, int maxCommandLength)
         {
-            inputHandler = new(process, commandData);
-            inputHandler.KeyActions = keyActions;
-            Handle = inputHandler.Handle;
-
             commandData = new()
             {
                 OptionsData = new IndexMemory<char>(maxCommandLength)
             };
+
+            inputHandler = new(process, commandData);
+            inputHandler.KeyActions = keyActions;
+            Handle = inputHandler.Handle;
         }
 
         public async Task UpdateAsync()
         {
-            await inputHandler.UpdateAsync();
             byte currentKey = (byte)inputHandler.CurrentPressedKey;
-            //if (currentKey != 0) 
-            //{
-                //var optionsData = commandData.OptionsData;
-                //optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
-                //optionsData.Index++;
-            //}
+            if (currentKey != InputHandler.UnknownKey && currentKey != 0)
+            {
+                var optionsData = commandData.OptionsData;
+                optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
+                optionsData.Index++;
+            }
+            await inputHandler.UpdateAsync();
         }
 
         public void Dispose() =>

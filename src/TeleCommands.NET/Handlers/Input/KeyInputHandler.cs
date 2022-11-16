@@ -6,10 +6,10 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 {
     public sealed class KeyInputHandler<T> : InputHandler where T : new()
     {
-        private readonly int keyCount = byte.MaxValue + 1;
-        private readonly T invokeObject;
+        private readonly int keyCount = (byte.MaxValue / 2) + 1;
+        private T invokeObject;
 
-        public uint CurrentPressedKey { get; private set; }
+        public KeyActivationHolder KeyInformations { get; private set; }
         public ReadOnlyMemory<KeyAction<T>> KeyActions { get; set; }
 
         public KeyInputHandler(Process process, T invokeObject) : base(process)
@@ -21,22 +21,23 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
         {
             if (TryGetCurrentKeyAction(out KeyAction<T> action, key))
                 await action.Action.Invoke(invokeObject);
-            CurrentPressedKey = key;
-            Console.Write($"{(char)CurrentPressedKey}");
+            KeyInformations = KeyActivationHolder.CreateCurrentActivation(key);
+
+            Console.Write($"{(char)key}");
         }
 
-        protected override uint GetInputAsync()
+        protected override Task<uint> GetInputAsync()
         {
             int halfKeyCount = (keyCount) / 2;
-            for (int i = 0; i < halfKeyCount; i++)
+            for (int i = 32; i < halfKeyCount; i++)
             {
-                int firstState = ((InteropHelper.GetAsyncKeyState(i)) * i);
+                int firstState = ((InteropHelper.GetAsyncKeyState(i) & 1) * i);
 
                 int lastKey = (keyCount - 1) - i;
-                int lastState = ((InteropHelper.GetAsyncKeyState(lastKey)) * lastKey);
+                int lastState = ((InteropHelper.GetAsyncKeyState(lastKey) & 1) * lastKey);
 
                 if ((firstState + lastState) > 0)
-                   return Task.FromResult((uint)((i * CalculatePositiveIndex(firstState)) | (lastKey * CalculatePositiveIndex(lastState))));
+                   return Task.FromResult((uint)((((i | 32) * CalculatePositiveIndex(firstState)) | ((lastKey | 32) * CalculatePositiveIndex(lastState)))));
             }
             return Task.FromResult(UnknownKey);
         }

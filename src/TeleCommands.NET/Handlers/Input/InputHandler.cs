@@ -5,8 +5,10 @@ namespace TeleCommands.NET.Handlers.Input
 {
     public abstract class InputHandler : IHandler, IDisposable
     {
-        protected const uint UnknownKey = 0x00F;
+        public static readonly uint UnknownKey = 0x00F;
         private bool isListening = true;
+
+        public uint CurrentPressedKey { get; protected set; }
 
         public IntPtr Handle { get; }
 
@@ -26,7 +28,9 @@ namespace TeleCommands.NET.Handlers.Input
                 await Task.CompletedTask;
 
             uint currentKey = await GetInputAsync();
-            if (currentKey != UnknownKey) 
+            CurrentPressedKey = currentKey;
+
+            if (CurrentPressedKey != UnknownKey) 
             {
                 await OnInputAsync(currentKey);
             }
