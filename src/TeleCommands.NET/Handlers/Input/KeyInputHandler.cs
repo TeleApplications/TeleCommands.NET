@@ -22,8 +22,6 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
             if (TryGetCurrentKeyAction(out KeyAction<T> action, key))
                 await action.Action.Invoke(invokeObject);
             KeyInformations = KeyActivationHolder.CreateCurrentActivation(key);
-
-            Console.Write($"{(char)key}");
         }
 
         protected override Task<uint> GetInputAsync()

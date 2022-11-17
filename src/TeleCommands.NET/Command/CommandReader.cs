@@ -21,9 +21,6 @@ namespace TeleCommands.NET.Command
 
                         data.CommandName = data.OptionsData.Memory[0..(index)].ToString();
                         data.OptionsData.Index = 0;
-
-                        if(CommandHelper.TryGetCommandAttribute(out CommandAttribute commandAttribute, data.CommandName))
-                            Console.WriteLine($"Type: {commandAttribute.Type} Name: {commandAttribute.Name}");
                     }
                 }),
                 new KeyAction<CommandData>(ConsoleKey.Enter, async(data) =>
