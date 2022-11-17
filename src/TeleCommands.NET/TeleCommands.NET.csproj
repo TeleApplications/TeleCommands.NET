@@ -16,4 +16,8 @@
     <ProjectReference Include="..\TeleCommands.NET.API\TeleCommands.NET.API.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Handlers\Enums\" />
+  </ItemGroup>
+
 </Project>

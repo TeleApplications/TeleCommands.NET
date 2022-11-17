@@ -27,15 +27,24 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
         protected override Task<uint> GetInputAsync()
         {
             int halfKeyCount = (keyCount) / 2;
-            for (int i = 32; i < halfKeyCount; i++)
-            {
-                int firstState = ((InteropHelper.GetAsyncKeyState(i) & 1) * i);
 
+            for (int i = 0; i < halfKeyCount; i++)
+            {
+                int firstKey = i;
                 int lastKey = (keyCount - 1) - i;
+
+                int firstState = ((InteropHelper.GetAsyncKeyState(firstKey) & 1) * firstKey);
                 int lastState = ((InteropHelper.GetAsyncKeyState(lastKey) & 1) * lastKey);
 
                 if ((firstState + lastState) > 0)
-                   return Task.FromResult((uint)((((i | 32) * CalculatePositiveIndex(firstState)) | ((lastKey | 32) * CalculatePositiveIndex(lastState)))));
+                {
+                    int firstResult = (firstKey) * CalculatePositiveIndex(firstState);
+                    int lastResult = (lastKey) * CalculatePositiveIndex(lastState);
+
+                    int finalResult = (firstResult | lastResult);
+                    finalResult = (InteropHelper.GetAsyncKeyState(16) & 0x8000) == 0 ? finalResult | 32 : finalResult;
+                    return Task.FromResult((uint)(finalResult));
+                }
             }
             return Task.FromResult(UnknownKey);
         }
