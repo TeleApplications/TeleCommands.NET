@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Text;
 
 namespace TeleCommands.NET
 {
@@ -6,6 +7,9 @@ namespace TeleCommands.NET
     public static class InteropHelper
     {
         [DllImport("user32.dll")]
-        public static extern int GetAsyncKeyState(int key);
+        public static extern uint GetAsyncKeyState(uint key);
+
+        [DllImport("user32.dll")]
+        public static extern int ToUnicode(uint virtualKey, uint scanCode, byte[] keyboardBuffer, out StringBuilder result, int bufferSize, uint flags);
     }
 }

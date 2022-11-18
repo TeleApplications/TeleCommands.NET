@@ -1,12 +1,17 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using TeleCommands.NET.Handlers.Enums;
 using TeleCommands.NET.Handlers.Input;
 
 namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 {
     public sealed class KeyInputHandler<T> : InputHandler where T : new()
     {
-        private readonly int keyCount = (byte.MaxValue / 2) + 1;
+        private static readonly uint[] virtualKeys =
+            (typeof(InputKey).GetEnumValues() as uint[])!;
+
+        private readonly int keyCount = (byte.MaxValue ^ 84);
         private T invokeObject;
 
         public KeyActivationHolder KeyInformations { get; private set; }
@@ -30,23 +35,35 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 
             for (int i = 0; i < halfKeyCount; i++)
             {
-                int firstKey = i;
-                int lastKey = (keyCount - 1) - i;
+                uint firstKey = virtualKeys[i];
+                int lastIndex = (keyCount - 1) - i;
+                uint lastKey = virtualKeys[lastIndex];
 
-                int firstState = ((InteropHelper.GetAsyncKeyState(firstKey) & 1) * firstKey);
-                int lastState = ((InteropHelper.GetAsyncKeyState(lastKey) & 1) * lastKey);
+                uint firstState = ((InteropHelper.GetAsyncKeyState(firstKey) & 1) * (uint)i);
+                uint lastState = ((InteropHelper.GetAsyncKeyState(lastKey) & 1) * (uint)lastIndex);
 
                 if ((firstState + lastState) > 0)
                 {
-                    int firstResult = (firstKey) * CalculatePositiveIndex(firstState);
-                    int lastResult = (lastKey) * CalculatePositiveIndex(lastState);
+                    uint firstResult = (firstKey) * (uint)CalculatePositiveIndex((int)firstState);
+                    uint lastResult = (lastKey) * (uint)CalculatePositiveIndex((int)lastState);
 
-                    int finalResult = (firstResult | lastResult);
-                    finalResult = (InteropHelper.GetAsyncKeyState(16) & 0x8000) == 0 ? finalResult | 32 : finalResult;
-                    return Task.FromResult((uint)(finalResult));
+                    uint finalResult = (firstResult | lastResult);
+                    return Task.FromResult(uint.Parse(ConvertVirtualKey(finalResult)));
                 }
             }
-            return Task.FromResult(UnknownKey);
+            return Task.FromResult((uint)InputKey.UnknownKey);
+        }
+
+        private string ConvertVirtualKey(uint key, bool isShift = false) 
+        {
+            int length = byte.MaxValue;
+            var keyboardBuffer = new byte[length];
+            var stringBuilder = new StringBuilder(length);
+
+            if(isShift)
+                keyboardBuffer[13] = 0xff;
+            InteropHelper.ToUnicode(key, 0, keyboardBuffer, out stringBuilder, length - 1, 0);
+            return stringBuilder.ToString();
         }
 
         private int CalculatePositiveIndex(int value)  

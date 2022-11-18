@@ -1,15 +1,14 @@
 ﻿using System.Diagnostics;
 using TeleCommands.NET.ConsoleInterface.Interfaces;
+using TeleCommands.NET.Handlers.Enums;
 
 namespace TeleCommands.NET.Handlers.Input
 {
     public abstract class InputHandler : IHandler, IDisposable
     {
-        public static readonly uint UnknownKey = 0x00F;
         private bool isListening = true;
 
         public uint CurrentPressedKey { get; protected set; }
-
         public IntPtr Handle { get; }
 
         public InputHandler(Process process) 
@@ -27,10 +26,10 @@ namespace TeleCommands.NET.Handlers.Input
             if (!isListening)
                 await Task.CompletedTask;
 
-            uint currentKey = await GetInputAsync();
+            var currentKey = await GetInputAsync();
             CurrentPressedKey = currentKey;
 
-            if (CurrentPressedKey != UnknownKey) 
+            if (CurrentPressedKey != (uint)InputKey.UnknownKey) 
             {
                 await OnInputAsync(currentKey);
             }

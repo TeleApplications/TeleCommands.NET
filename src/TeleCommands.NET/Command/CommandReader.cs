@@ -4,6 +4,7 @@ using TeleCommands.NET.Command.DataStructures;
 using TeleCommands.NET.ConsoleInterface.Handlers.Input;
 using TeleCommands.NET.ConsoleInterface.Interfaces;
 using TeleCommands.NET.ConsoleInterface.Structs;
+using TeleCommands.NET.Handlers.Enums;
 using TeleCommands.NET.Handlers.Input;
 
 namespace TeleCommands.NET.Command
@@ -52,10 +53,10 @@ namespace TeleCommands.NET.Command
 
         public async Task UpdateAsync()
         {
-            byte currentKey = (byte)inputHandler.CurrentPressedKey;
-            if (currentKey != InputHandler.UnknownKey && currentKey != 0)
+            var currentKey = inputHandler.CurrentPressedKey;
+            if (currentKey != (uint)InputKey.UnknownKey && currentKey != 0)
             {
-                Console.Write($"{(char)currentKey}");
+                Console.Write($"{currentKey}");
 
                 var optionsData = commandData.OptionsData;
                 optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
