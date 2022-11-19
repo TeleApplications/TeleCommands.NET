@@ -31,7 +31,7 @@ namespace TeleCommands.NET.Handlers.Input
 
             if (CurrentPressedKey != (uint)InputKey.UnknownKey) 
             {
-                await OnInputAsync(currentKey);
+                await OnInputAsync((uint)currentKey);
             }
         }
 

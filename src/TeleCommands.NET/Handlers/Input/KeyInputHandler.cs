@@ -62,7 +62,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 
             if(isShift)
                 keyboardBuffer[13] = 0xff;
-            InteropHelper.ToUnicode(key, 0, keyboardBuffer, out stringBuilder, length - 1, 0);
+            InteropHelper.ToUnicode(key, 0, keyboardBuffer, ref stringBuilder, length - 1, 0);
             return stringBuilder.ToString();
         }
 
