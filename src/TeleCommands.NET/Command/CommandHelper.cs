@@ -31,7 +31,7 @@ namespace TeleCommands.NET
         private static async Task<ReadOnlyMemory<OptionData>> SeparateOptionsAsync(ReadOnlyMemory<char> commandData, ICommand<bool> command)
         {
             var optionsData = new List<OptionData>();
-            int lastIndex = 0;
+            int lastIndex = 1;
 
             var commandOptions = command.Options;
             for (int i = 0; i < commandOptions.Length; i++)
@@ -46,12 +46,12 @@ namespace TeleCommands.NET
                 //Also this should be done, by just creating a simple reference method
                 //however I don't found it necessary. It's possible that this implementation
                 //will be changed
-                int firstSeparatorIndex = await GetFirstSeparatorIndexAsync(commandData[lastIndex..], optionBarrier.Start);
-                argument = commandData[lastIndex..(firstSeparatorIndex)];
-                lastIndex = firstSeparatorIndex;
+                int firstSeparatorIndex = await GetFirstSeparatorIndexAsync(commandData[(lastIndex)..], optionBarrier.Start);
+                argument = commandData[(lastIndex)..(firstSeparatorIndex + 1)];
+                lastIndex = firstSeparatorIndex + 2;
 
-                int secondSeparatorIndex = await GetFirstSeparatorIndexAsync(commandData[lastIndex..], optionBarrier.End);
-                optionData = commandData[lastIndex..(secondSeparatorIndex)];
+                int secondSeparatorIndex = await GetFirstSeparatorIndexAsync(commandData[(lastIndex)..], optionBarrier.End);
+                optionData = commandData[(lastIndex)..(secondSeparatorIndex + (lastIndex + 1))];
                 lastIndex = secondSeparatorIndex;
 
                 var currentData = new OptionData(argument, optionData);
@@ -62,12 +62,12 @@ namespace TeleCommands.NET
 
         private static async Task<int> GetFirstSeparatorIndexAsync(ReadOnlyMemory<char> sequence, char separator) 
         {
+            int sequanceLength = sequence.Length;
             int index = 0;
 
-            await Task.Run(() => 
+            await Task.Run(() =>
             {
-                char currentChar = sequence.Span[index];
-                while (currentChar != separator) { index++; }
+                while (sequence.Span[index] != separator && (sequanceLength - 1) != (index)) { index++; }
             });
             return index;
         }

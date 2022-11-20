@@ -25,7 +25,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
         protected override async Task OnInputAsync(uint key)
         {
             if (TryGetCurrentKeyAction(out KeyAction<T> action, key))
-                await action.Action.Invoke(invokeObject);
+                invokeObject = await action.Action.Invoke(invokeObject);
             KeyInformations = KeyActivationHolder.CreateCurrentActivation(key);
         }
 

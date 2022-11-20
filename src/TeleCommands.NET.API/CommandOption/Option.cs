@@ -30,7 +30,7 @@ namespace TeleCommands.NET.CommandOption
         private async Task SetArgumentsAsync(ReadOnlyMemory<char> arguments)
         {
             var currentArguments = Arguments.ToArray();
-            int separatorDifference = (byte)arguments.Span[0] & (byte)arguments.Span[1];
+            int separatorDifference = (byte)arguments.Span[0] | (byte)arguments.Span[1];
 
             if (separatorDifference == Argument.ArgumentSeparator) 
             {
@@ -49,14 +49,14 @@ namespace TeleCommands.NET.CommandOption
 
         private bool TryGetArgument([NotNullWhen(true)] out Argument argument, char argumentName, ReadOnlyMemory<Argument> arguments) 
         {
-            var vectorSymbol = new Vector<char>(argumentName);
-            var vectorSize = Vector<char>.Count;
+            var vectorSymbol = new Vector<byte>((byte)argumentName);
+            var vectorSize = Vector<byte>.Count;
 
             int difference = arguments.Length - vectorSize;
             for (int i = 0; i < difference; i+=vectorSize)
             {
                 var currentArgument = arguments.Span[i];
-                var currentSymbol = new Vector<char>(currentArgument.ArgumentName[0]);
+                var currentSymbol = new Vector<byte>((byte)currentArgument.ArgumentName[0]);
 
                 if (Vector.EqualsAll(vectorSymbol, currentSymbol)) 
                 {

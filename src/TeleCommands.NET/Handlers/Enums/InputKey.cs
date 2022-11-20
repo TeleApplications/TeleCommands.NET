@@ -7,7 +7,7 @@ namespace TeleCommands.NET.Handlers.Enums
     //this enum of all virtual keys https://www.pinvoke.net/default.aspx/Enums/VirtualKeys.html
     public enum InputKey : uint
     {
-        UnknownKey = 0x00F,
+        UnknownKey = 0x00,
 
         LeftButton = 0x01,
         RightButton = 0x02,

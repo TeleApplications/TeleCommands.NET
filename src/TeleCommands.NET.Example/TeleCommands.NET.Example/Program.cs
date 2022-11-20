@@ -20,4 +20,4 @@ Task.Run(async () =>
         await Task.Delay(1);
     }
 });
-Console.ReadLine();
+while (isRunning) { Console.ReadLine(); };

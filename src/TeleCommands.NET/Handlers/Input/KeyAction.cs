@@ -3,9 +3,9 @@
     public readonly struct KeyAction<T>
     {
         public ConsoleKey Key { get; }
-        public Func<T, Task> Action { get; }
+        public Func<T, Task<T>> Action { get; }
 
-        public KeyAction(ConsoleKey key, Func<T, Task> action) 
+        public KeyAction(ConsoleKey key, Func<T, Task<T>> action) 
         {
             Key = key;
             Action = action;

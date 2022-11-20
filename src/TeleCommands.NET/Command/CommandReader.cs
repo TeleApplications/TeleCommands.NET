@@ -1,11 +1,9 @@
 ﻿using System.Diagnostics;
-using TeleCommands.NET.Attributes;
 using TeleCommands.NET.Command.DataStructures;
 using TeleCommands.NET.ConsoleInterface.Handlers.Input;
 using TeleCommands.NET.ConsoleInterface.Interfaces;
 using TeleCommands.NET.ConsoleInterface.Structs;
 using TeleCommands.NET.Handlers.Enums;
-using TeleCommands.NET.Handlers.Input;
 
 namespace TeleCommands.NET.Command
 {
@@ -19,15 +17,18 @@ namespace TeleCommands.NET.Command
                     if(data.CommandName is null)
                     {
                         int index = data.OptionsData.Index;
-
                         data.CommandName = data.OptionsData.Memory[0..(index)].ToString();
                         data.OptionsData.Index = 0;
                     }
+                    return data;
                 }),
                 new KeyAction<CommandData>(ConsoleKey.Enter, async(data) =>
                 {
                     await CommandHelper.RunCommandAsync(data);
+
+                    data.CommandName = null!;
                     data.OptionsData.Index = 0;
+                    return data;
                 })
             };
 
@@ -54,10 +55,8 @@ namespace TeleCommands.NET.Command
         public async Task UpdateAsync()
         {
             var currentKey = inputHandler.CurrentPressedKey;
-            if (currentKey != (uint)InputKey.UnknownKey && currentKey != 0)
+            if (currentKey != (uint)InputKey.UnknownKey && currentKey != (uint)InputKey.Return)
             {
-                Console.Write($"{(char)currentKey}");
-
                 var optionsData = commandData.OptionsData;
                 optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
                 optionsData.Index++;
