@@ -11,7 +11,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
         private static readonly uint[] virtualKeys =
             (typeof(InputKey).GetEnumValues() as uint[])!;
 
-        private readonly int keyCount = (byte.MaxValue ^ 84);
+        private readonly int keyCount = (byte.MaxValue ^ 87);
         private T invokeObject;
 
         public KeyActivationHolder KeyInformations { get; private set; }
@@ -46,24 +46,30 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
                 {
                     uint firstResult = (firstKey) * (uint)CalculatePositiveIndex((int)firstState);
                     uint lastResult = (lastKey) * (uint)CalculatePositiveIndex((int)lastState);
-
                     uint finalResult = (firstResult | lastResult);
-                    return Task.FromResult(uint.Parse(ConvertVirtualKey(finalResult)));
+
+                    if (finalResult != 16)
+                    {
+                        bool shiftState = InteropHelper.GetAsyncKeyState(16) > 0;
+                        return Task.FromResult((uint)ConvertVirtualKey(finalResult, shiftState));
+                    }
                 }
             }
             return Task.FromResult((uint)InputKey.UnknownKey);
         }
 
-        private string ConvertVirtualKey(uint key, bool isShift = false) 
+        private char ConvertVirtualKey(uint key, bool isShift = false) 
         {
             int length = byte.MaxValue;
+            uint scanKey = InteropHelper.MapVirtualKeyA(key, 0);
+
             var keyboardBuffer = new byte[length];
-            var stringBuilder = new StringBuilder(length);
+            var stringBuilder = new StringBuilder(1);
 
             if(isShift)
-                keyboardBuffer[13] = 0xff;
-            InteropHelper.ToUnicode(key, 0, keyboardBuffer, ref stringBuilder, length - 1, 0);
-            return stringBuilder.ToString();
+                keyboardBuffer[16] = 0xff;
+            InteropHelper.ToAscii(key, scanKey, keyboardBuffer, stringBuilder, 0);
+            return stringBuilder.Length == 0 ? ' ' : stringBuilder[0]; 
         }
 
         private int CalculatePositiveIndex(int value)  

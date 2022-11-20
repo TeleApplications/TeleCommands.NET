@@ -56,7 +56,7 @@ namespace TeleCommands.NET.Command
             var currentKey = inputHandler.CurrentPressedKey;
             if (currentKey != (uint)InputKey.UnknownKey && currentKey != 0)
             {
-                Console.Write($"{currentKey}");
+                Console.Write($"{(char)currentKey}");
 
                 var optionsData = commandData.OptionsData;
                 optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
