@@ -12,7 +12,7 @@ namespace TeleCommands.NET.Command
         private ReadOnlyMemory<KeyAction<CommandData>> keyActions =
             new KeyAction<CommandData>[]
             {
-                new KeyAction<CommandData>(ConsoleKey.Spacebar, async(data) =>
+                new KeyAction<CommandData>(ConsoleKey.Spacebar, (data) =>
                 {
                     if(data.CommandName is null)
                     {
@@ -20,7 +20,7 @@ namespace TeleCommands.NET.Command
                         data.CommandName = data.OptionsData.Memory[0..(index)].ToString();
                         data.OptionsData.Index = 0;
                     }
-                    return data;
+                    return Task.FromResult(data);
                 }),
                 new KeyAction<CommandData>(ConsoleKey.Enter, async(data) =>
                 {
@@ -54,6 +54,9 @@ namespace TeleCommands.NET.Command
 
         public async Task UpdateAsync()
         {
+            if (!IsListening)
+                return;
+
             var currentKey = inputHandler.CurrentPressedKey;
             if (currentKey != (uint)InputKey.UnknownKey && currentKey != (uint)InputKey.Return)
             {
