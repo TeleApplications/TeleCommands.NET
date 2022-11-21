@@ -9,7 +9,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 {
     public sealed class KeyInputHandler<T> : InputHandler where T : new()
     {
-        private static readonly char emptyCharacter = ' ';
+        private static readonly char emptyCharacter = '\0';
         private static readonly uint[] virtualKeys =
             (typeof(InputKey).GetEnumValues() as uint[])!;
 
@@ -68,7 +68,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
             var stringBuilder = new StringBuilder(1);
 
             if(isShift)
-                keyboardBuffer[(uint)InputKey.Shift] = 0xff;
+                keyboardBuffer[(int)(uint)InputKey.Shift] = 0xff;
             InteropHelper.ToAscii(key, scanKey, keyboardBuffer, stringBuilder, 0);
             return stringBuilder.Length == 0 ? emptyCharacter : stringBuilder[0]; 
         }
