@@ -60,7 +60,7 @@ namespace TeleCommands.NET
             return optionsData.ToArray();
         }
 
-        private static async Task<int> GetFirstSeparatorIndexAsync(ReadOnlyMemory<char> sequence, char separator) 
+        public static async Task<int> GetFirstSeparatorIndexAsync(ReadOnlyMemory<char> sequence, char separator) 
         {
             int sequanceLength = sequence.Length;
             int index = 0;
