@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using TeleCommands.NET.API.CommandOption.Results;
 using TeleCommands.NET.Attributes;
 using TeleCommands.NET.Command.DataStructures;
 using TeleCommands.NET.CommandOption.OptionStructs;
@@ -13,7 +14,7 @@ namespace TeleCommands.NET
         private static ImmutableArray<CommandAttribute> commandAttributes =
             ImmutableArray.CreateRange(GetCommandAttributes(AppDomain.CurrentDomain.GetAssemblies()));
 
-        public static async Task RunCommandAsync(CommandData commandData) 
+        public static async Task<CommandResult> RunCommandAsync(CommandData commandData) 
         {
             if (!TryGetCommandAttribute(out CommandAttribute attribute, commandData.CommandName))
                 throw new Exception("Command was not found");
@@ -22,9 +23,11 @@ namespace TeleCommands.NET
             var options = commandData.OptionsData;
 
             var data = options.Memory[0..options.Index];
-            ReadOnlyMemory<OptionData> optionsdata = await SeparateOptionsAsync(data, commandInstance);
+            if(data.Length == 0)
+                return await commandInstance.ExecuteCommandAsync(null);
 
-            await commandInstance.ExecuteCommandAsync(optionsdata);
+            ReadOnlyMemory<OptionData> optionsdata = await SeparateOptionsAsync(data, commandInstance);
+            return await commandInstance.ExecuteCommandAsync(optionsdata);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

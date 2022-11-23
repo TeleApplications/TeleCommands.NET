@@ -22,8 +22,9 @@ namespace TeleCommands.NET.CommandOption
         {
             if(optionResult is null)
                 return new ErrorResult<TSource>(optionResult, ErrorMessage);
+            if(data.Arguments.Length > 0)
+                await SetArgumentsAsync(data.Arguments);
 
-            await SetArgumentsAsync(data.Arguments);
             return new SuccesfulResult<TSource>(optionResult);
         }
 

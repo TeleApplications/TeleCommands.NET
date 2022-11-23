@@ -7,13 +7,13 @@ using TeleCommands.NET.Interfaces;
 
 namespace TeleCommands.NET.Example.Commands.FileCommands
 {
-    [Command("file", typeof(FileCommand))]
-    internal sealed class FileCommand : ICommand<bool>
+    [Command("echo", typeof(EchoCommand))]
+    internal sealed class EchoCommand : ICommand<bool>
     {
         public ImmutableArray<IOption<bool>> Options { get; } =
             ImmutableArray.Create
             (
-                (IOption<bool>)ShowFileOption.FactoryValue
+                (IOption<bool>)ShowTextOption.FactoryValue
             );
 
         public async Task<CommandResult> ExecuteCommandAsync(ReadOnlyMemory<OptionData> optionData)
