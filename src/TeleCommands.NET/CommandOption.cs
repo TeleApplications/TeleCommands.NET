@@ -14,7 +14,7 @@ namespace TeleCommands.NET
         protected ReadOnlyMemory<char> commandResult { get; private set; }
 
         public override OptionBarrier CharacterBarrier { get; } =
-            new OptionBarrier('0', '0');
+            new OptionBarrier('{', '}');
 
         public override async Task<IResult<bool>> ExecuteOptionAsync(OptionData data)
         {

@@ -49,17 +49,19 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
                     uint lastResult = (lastKey) * (uint)CalculatePositiveIndex((int)lastState);
                     uint finalResult = (firstResult | lastResult);
 
-                    if (finalResult != (uint)InputKey.Shift)
+                    if (finalResult != (uint)InputKey.Shift || finalResult != (uint)InputKey.Menu) 
                     {
                         bool shiftState = InteropHelper.GetAsyncKeyState((uint)InputKey.Shift) > 0;
-                        return Task.FromResult((uint)ConvertVirtualKey(finalResult, shiftState));
+                        bool altState = InteropHelper.GetAsyncKeyState((uint)InputKey.Menu) > 0;
+
+                        return Task.FromResult((uint)ConvertVirtualKey(finalResult, shiftState, altState));
                     }
                 }
             }
             return Task.FromResult((uint)InputKey.UnknownKey);
         }
 
-        private char ConvertVirtualKey(uint key, bool isShift = false) 
+        private char ConvertVirtualKey(uint key, bool isShift = false, bool isAlt = false) 
         {
             int length = byte.MaxValue;
             uint scanKey = InteropHelper.MapVirtualKeyA(key, 0);
@@ -69,6 +71,12 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
 
             if(isShift)
                 keyboardBuffer[(int)(uint)InputKey.Shift] = 0xff;
+            if (isAlt) 
+            {
+                keyboardBuffer[(int)(uint)InputKey.Menu] = 0xff;
+                keyboardBuffer[(int)(uint)InputKey.Control] = 0xff;
+            }
+
             InteropHelper.ToAscii(key, scanKey, keyboardBuffer, stringBuilder, 0);
             return stringBuilder.Length == 0 ? emptyCharacter : stringBuilder[0]; 
         }
