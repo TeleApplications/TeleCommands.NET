@@ -11,13 +11,15 @@ namespace TeleCommands.NET
 {
     public static class CommandHelper
     {
+        private static readonly CommandResult unknownCommandResult =
+            new(null) { Message = "Command was not found" };
         private static ImmutableArray<CommandAttribute> commandAttributes =
             ImmutableArray.CreateRange(GetCommandAttributes(AppDomain.CurrentDomain.GetAssemblies()));
 
         public static async Task<CommandResult> RunCommandAsync(CommandData commandData) 
         {
             if (!TryGetCommandAttribute(out CommandAttribute attribute, commandData.CommandName))
-                throw new Exception("Command was not found");
+                return unknownCommandResult;
 
             var commandInstance = (ICommand<bool>)Activator.CreateInstance(attribute.Type)!;
             var options = commandData.OptionsData;

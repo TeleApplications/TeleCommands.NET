@@ -1,23 +1,13 @@
 ﻿using System.Diagnostics;
 using TeleCommands.NET.Command;
+using TeleCommands.NET.ConsoleInterface.Interfaces;
+using TeleCommands.NET.Handlers;
 
-bool isRunning = true;
-int lastMillisecond = 0;
+
 var currentProcess = Process.GetCurrentProcess();
-var commandReader = new CommandReader(currentProcess, 128);
-
-Task.Run(async () =>
-{
-    while (isRunning)
+var handlerManager =
+    new HandlerManager(new IHandler[]
     {
-        int currentMillisecond = DateTime.Now.Millisecond;
-        if (currentMillisecond > lastMillisecond + 1000)
-            isRunning = false;
-
-        await commandReader.UpdateAsync();
-        lastMillisecond = currentMillisecond;
-
-        await Task.Delay(1);
-    }
-});
-while (isRunning) { Console.ReadLine(); };
+        new CommandReader(currentProcess, 128),
+    });
+await handlerManager.StartHandlersUpdateAsync();

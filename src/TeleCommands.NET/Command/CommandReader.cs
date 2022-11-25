@@ -32,8 +32,6 @@ namespace TeleCommands.NET.Command
                 })
             };
 
-        //This is temporary solutions due to uncomplemet command
-        //handler manager, that will contain every specific handler
         private KeyInputHandler<CommandData> inputHandler;
         private CommandData commandData;
 
