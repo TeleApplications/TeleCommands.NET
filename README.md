@@ -3,9 +3,9 @@ An abstract command library with versatile abstraction for creating new commands
 
 ---
 ## TODO
-- [ ] Support for multiple commands in one line <--- Currently in a development
+- [x] Support for multiple commands in one line
 - [ ] Proper documentation in a code with at least 5 examples
-- [ ] Reasonable error message structure
+- [ ] Reasonable error message structure <--- Currently in a development
 
 ### Informations
 A lot of a code is going to change, so before any stable releases, there will be breaking changes
