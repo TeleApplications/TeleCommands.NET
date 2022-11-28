@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
 
 namespace TeleCommands.NET

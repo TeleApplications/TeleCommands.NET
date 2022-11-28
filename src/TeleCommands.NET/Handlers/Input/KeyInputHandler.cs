@@ -30,7 +30,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected override Task<uint> GetInputAsync()
+        protected override async Task<uint> GetInputAsync()
         {
             int halfKeyCount = (keyCount) / 2;
 
@@ -54,13 +54,14 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
                         bool shiftState = InteropHelper.GetAsyncKeyState((uint)InputKey.Shift) > 0;
                         bool altState = InteropHelper.GetAsyncKeyState((uint)InputKey.Menu) > 0;
 
-                        return Task.FromResult((uint)ConvertVirtualKey(finalResult, shiftState, altState));
+                        return ConvertVirtualKey(finalResult, shiftState, altState);
                     }
                 }
             }
-            return Task.FromResult((uint)InputKey.UnknownKey);
+            return (uint)InputKey.UnknownKey;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private char ConvertVirtualKey(uint key, bool isShift = false, bool isAlt = false) 
         {
             int length = byte.MaxValue;
