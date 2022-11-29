@@ -11,3 +11,4 @@ var handlerManager =
         new CommandReader(currentProcess, 128),
     });
 await handlerManager.StartHandlersUpdateAsync();
+Console.ReadLine();

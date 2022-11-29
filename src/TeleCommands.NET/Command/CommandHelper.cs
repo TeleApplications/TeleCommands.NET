@@ -56,7 +56,7 @@ namespace TeleCommands.NET
                 lastIndex = firstSeparatorIndex + 2;
 
                 int secondSeparatorIndex = await GetFirstSeparatorIndexAsync(commandData[(lastIndex)..], optionBarrier.End);
-                optionData = commandData[(lastIndex)..(secondSeparatorIndex + (lastIndex + 1))];
+                optionData = commandData[(lastIndex)..(secondSeparatorIndex + (lastIndex))];
                 lastIndex = secondSeparatorIndex;
 
                 var currentData = new OptionData(argument, optionData);
