@@ -13,13 +13,17 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
         public ImmutableArray<IOption<bool>> Options { get; } =
             ImmutableArray.Create
             (
+                (IOption<bool>)DataOption.FactoryValue,
                 (IOption<bool>)DataOption.FactoryValue
             );
 
-        public async Task<CommandResult> ExecuteCommandAsync(ReadOnlyMemory<OptionData> optionData) 
+        public async Task<CommandResult> ExecuteCommandAsync(ReadOnlyMemory<OptionData> optionData)
         {
-            var dataOption = (Options[0] as DataOption);
-            var data = dataOption!.TryGetData(out ReadOnlyMemory<string> result, optionData.Span[0]);
+            var subnetDataOption = (Options[0] as DataOption);
+            var addressDataOption = (Options[1] as DataOption);
+
+            var subnetResult = subnetDataOption!.TryGetData(out ReadOnlyMemory<string> subnetData, optionData.Span[0]);
+            var addressResult = addressDataOption!.TryGetData(out ReadOnlyMemory<string> addressData, optionData.Span[1]);
 
             return null!;
         }
