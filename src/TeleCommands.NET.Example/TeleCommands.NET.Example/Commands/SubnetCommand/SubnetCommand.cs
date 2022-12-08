@@ -11,10 +11,10 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
     internal sealed class SubnetCommand : ICommand<bool>
     {
         public ImmutableArray<IOption<bool>> Options { get; } =
-            ImmutableArray.Create
+            ImmutableArray.Create<IOption<bool>>
             (
-                (IOption<bool>)DataOption.FactoryValue,
-                (IOption<bool>)DataOption.FactoryValue
+                DataOption.FactoryValue,
+                DataOption.FactoryValue
             );
 
         public async Task<CommandResult> ExecuteCommandAsync(ReadOnlyMemory<OptionData> optionData)
@@ -24,7 +24,7 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
 
             var subnetResult = subnetDataOption!.TryGetData(out ReadOnlyMemory<string> subnetData, optionData.Span[0]);
             var addressResult = addressDataOption!.TryGetData(out ReadOnlyMemory<string> addressData, optionData.Span[1]);
-
+ 
             return null!;
         }
     }

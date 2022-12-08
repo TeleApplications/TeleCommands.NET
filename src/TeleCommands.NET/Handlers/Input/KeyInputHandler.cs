@@ -58,6 +58,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
                     }
                 }
             }
+            await Task.CompletedTask;
             return (uint)InputKey.UnknownKey;
         }
 
@@ -71,11 +72,11 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
             var stringBuilder = new StringBuilder(1);
 
             if(isShift)
-                keyboardBuffer[(int)(uint)InputKey.Shift] = 0xff;
+                keyboardBuffer[(int)(uint)InputKey.Shift] = (byte)InputKey.None;
             if (isAlt) 
             {
-                keyboardBuffer[(int)(uint)InputKey.Menu] = 0xff;
-                keyboardBuffer[(int)(uint)InputKey.Control] = 0xff;
+                keyboardBuffer[(int)(uint)InputKey.Menu] = (byte)InputKey.None;
+                keyboardBuffer[(int)(uint)InputKey.Control] = (byte)InputKey.None;
             }
 
             InteropHelper.ToAscii(key, scanKey, keyboardBuffer, stringBuilder, 0);

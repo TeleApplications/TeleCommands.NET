@@ -8,6 +8,7 @@ namespace TeleCommands.NET.Handlers.Enums
     public enum InputKey : uint
     {
         UnknownKey = 0x00,
+        None = 0xff,
 
         LeftButton = 0x01,
         RightButton = 0x02,

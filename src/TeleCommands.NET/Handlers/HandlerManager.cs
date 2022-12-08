@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using TeleCommands.NET.ConsoleInterface.Interfaces;
+﻿using TeleCommands.NET.ConsoleInterface.Interfaces;
 
 namespace TeleCommands.NET.Handlers
 {
@@ -31,6 +30,9 @@ namespace TeleCommands.NET.Handlers
                     await Task.Delay(1);
                 }
             });
+
+            //TODO: Try to avoid this type of creating "echo" mode for
+            //console input reading
             while (IsRunning) { Console.ReadLine(); };
         }
 
