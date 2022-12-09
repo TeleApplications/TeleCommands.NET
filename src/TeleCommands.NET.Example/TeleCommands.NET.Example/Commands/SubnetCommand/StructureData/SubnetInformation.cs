@@ -4,32 +4,23 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand.StructureData
 {
     internal sealed class SubnetInformation
     {
-        private static readonly int privateAddressCount = 3;
+        private static ReadOnlyMemory<byte> defaultMask =
+            new byte[] { 255, 255, 255, 255 };
 
         public IPAddress IpAddress { get; }
         public IPAddress Mask { get; }
+        public int Prefix { get; }
 
-        public SubnetInformation(string ipAddress) 
+        public SubnetInformation(string ipAddress, int prefix)
         {
-            var newAddress = IPAddress.Parse(ipAddress);
-            IpAddress = newAddress;
-
-            byte maskIdentificator = byte.Parse(ipAddress[0..3]);
-            Mask = CalculateMask(maskIdentificator);
         }
 
-        private IPAddress CalculateMask(byte addressIdentificator)
+        private IPAddress CalculateMask(int prefix) 
         {
-            byte[] addressBytes = new byte[32];
-            byte maskLength = byte.MaxValue / 2;
+            int prefixDifference = 32 - prefix;
 
-            for (int i = 0; i < privateAddressCount; i++)
-            {
-                int firstIndex = (maskLength * (i));
-                int lastIndex = (maskLength * (i + 1));
-            }
-
-            return new IPAddress(addressBytes);
+            int shiftValue = prefixDifference % 8;
+            int maskIndex = (prefixDifference - shiftValue) / 8;
         }
     }
 }
