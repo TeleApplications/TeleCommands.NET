@@ -37,7 +37,7 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand.Options
             while (index < data.Length) 
             {
                 int currentIndex = await CommandHelper.GetFirstSeparatorIndexAsync(data[index..], separator);
-                if (currentIndex == 0) 
+                if (currentIndex == (data.Length - 1)) 
                 {
                     var lastData = data.Span[(index)..].ToString();
                     separateData.Add(lastData);
