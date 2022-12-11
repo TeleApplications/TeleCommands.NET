@@ -30,7 +30,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected override async Task<uint> GetInputAsync()
+        protected override async ValueTask<uint> GetInputAsync()
         {
             int halfKeyCount = (keyCount) / 2;
 
