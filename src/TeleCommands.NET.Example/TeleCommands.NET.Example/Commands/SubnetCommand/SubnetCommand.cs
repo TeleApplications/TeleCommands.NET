@@ -35,7 +35,7 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             return null!;
         }
 
-        private async Task<ReadOnlyMemory<NetworkData>> GetNetworkData(ReadOnlyMemory<string> data) 
+        private async Task<Memory<NetworkData>> GetNetworkData(ReadOnlyMemory<string> data) 
         {
             int dataLength = data.Length;
             Memory<NetworkData> networkData = new NetworkData[dataLength];
@@ -50,7 +50,7 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             return networkData;
         }
 
-        private IEnumerable<NetworkInformation> CalculateNetworkSubnet(SubnetInformation information, ReadOnlyMemory<NetworkData> networkData)
+        private IEnumerable<NetworkInformation> CalculateNetworkSubnet(SubnetInformation information, Memory<NetworkData> networkData)
         {
             //TODO: Create first check, if even the all networks fit
             //into the mask host length
@@ -61,11 +61,41 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             int networkLength = networkData.Length;
             while (networkLength != index) 
             {
+                int networkCount = (networkLength) - index;
+                for (int i = 0; i < networkCount; i++)
+                {
+                    var currentNetwork = networkData.Span[i];
+                    var ipRange = GetIpRange(currentNetwork, addressRanges);
+                    if (ipRange is not null) 
+                    {
+                        addressRanges.Remove((IpRange)ipRange);
+                        networkData.Span[i] = networkData.Span[(networkCount - 1)];
 
+                        index++;
+                    }
+                }
+                //It looks like there is a better solution of creating
+                //small 2x1 nodes of subnets, by just simply have two
+                //indexes that are going to be changed by every itteration
             }
         }
 
-        private IPAddress CalculateBroadCast(IPAddress address, int prefix) 
+        private IpRange? GetIpRange(NetworkData data, List<IpRange> addressRange) 
+        {
+            int addressLength = addressRange.Count;
+            for (int i = 0; i < addressLength; i++)
+            {
+                int currentIndex = (addressLength - 1) - i;
+                var currentRange = addressRange[currentIndex];
+
+                int minHostCount = (int)Math.Pow(2, (32 - currentRange.Prefix)) / 2;
+                if (data.HostCount > (minHostCount - 2))
+                    return currentRange;
+            }
+            return null;
+        }
+
+        private IPAddress CalculateBroadCast(IPAddress address, int prefix)
         {
             var addressBytes = address.GetAddressBytes();
             var maskBytes = SubnetInformation.CalculateMask(prefix).GetAddressBytes();
