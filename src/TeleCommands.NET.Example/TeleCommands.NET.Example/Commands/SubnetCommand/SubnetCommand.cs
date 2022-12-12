@@ -55,9 +55,10 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             //TODO: Create first check, if even the all networks fit
             //into the mask host length
             IPAddress baseBroadCast = CalculateBroadCast(information.IpAddress, information.Prefix);
-            var addressRanges = new List<IpRange>() { new IpRange(information.IpAddress, baseBroadCast, information.Prefix) };
-            int index = 0;
+            var baseRange = new IpRange(information.IpAddress, baseBroadCast, information.Prefix);
+            IpRange[] addressRanges = { baseRange, baseRange};
 
+            int index = 0;
             int networkLength = networkData.Length;
             while (networkLength != index) 
             {
@@ -65,12 +66,9 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
                 for (int i = 0; i < networkCount; i++)
                 {
                     var currentNetwork = networkData.Span[i];
-                    var ipRange = GetIpRange(currentNetwork, addressRanges);
-                    if (ipRange is not null) 
+                    if (InIpRange(currentNetwork, addressRanges[1]))
                     {
-                        addressRanges.Remove((IpRange)ipRange);
                         networkData.Span[i] = networkData.Span[(networkCount - 1)];
-
                         index++;
                     }
                 }
@@ -80,19 +78,10 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             }
         }
 
-        private IpRange? GetIpRange(NetworkData data, List<IpRange> addressRange) 
+        private bool InIpRange(NetworkData data, IpRange addressRange) 
         {
-            int addressLength = addressRange.Count;
-            for (int i = 0; i < addressLength; i++)
-            {
-                int currentIndex = (addressLength - 1) - i;
-                var currentRange = addressRange[currentIndex];
-
-                int minHostCount = (int)Math.Pow(2, (32 - currentRange.Prefix)) / 2;
-                if (data.HostCount > (minHostCount - 2))
-                    return currentRange;
-            }
-            return null;
+            int minHostCount = (int)Math.Pow(2, (32 - addressRange.Prefix)) / 2;
+            return data.HostCount > (minHostCount - 2);
         }
 
         private IPAddress CalculateBroadCast(IPAddress address, int prefix)
