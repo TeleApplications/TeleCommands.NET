@@ -58,6 +58,7 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             var baseRange = new IpRange(information.IpAddress, baseBroadCast, information.Prefix);
             IpRange[] addressRanges = { baseRange, baseRange};
 
+            int sliceCount = 0;
             int index = 0;
             int networkLength = networkData.Length;
             while (networkLength != index) 
@@ -72,9 +73,11 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
                         index++;
                     }
                 }
-                //It looks like there is a better solution of creating
-                //small 2x1 nodes of subnets, by just simply have two
-                //indexes that are going to be changed by every itteration
+                sliceCount++;
+
+                addressRanges[0].Start = CalculateBroadCast(addressRanges[0].Start, information.Prefix + sliceCount);
+                addressRanges[1].Start = CalculateBroadCast(addressRanges[0].End, information.Prefix + sliceCount);
+                addressRanges[1].End = addressRanges[0].End;
             }
         }
 
