@@ -29,13 +29,19 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             var addressDataOption = (Options[1] as DataOption);
             var prefixDataOption = (Options[2] as DataOption);
 
-            var subnetResult = subnetDataOption!.TryGetData(out ReadOnlyMemory<string> subnetData, optionData.Span[0]);
-            var addressResult = addressDataOption!.TryGetData(out ReadOnlyMemory<string> addressData, optionData.Span[0]);
+            addressDataOption!.TryGetData(out ReadOnlyMemory<string> addressData, optionData.Span[0]);
+            prefixDataOption!.TryGetData(out ReadOnlyMemory<string> prefixData, optionData.Span[0]);
+            if (subnetDataOption!.TryGetData(out ReadOnlyMemory<string> subnetData, optionData.Span[0]).Value) 
+            {
+                var networkData = await GetNetworkDataAsync(subnetData);
+                var networkInformation = CalculateNetworkSubnet(new SubnetInformation(addressData.Span[0], int.Parse(prefixData.Span[0])), networkData);
+            }
+
 
             return null!;
         }
 
-        private async Task<Memory<NetworkData>> GetNetworkData(ReadOnlyMemory<string> data) 
+        private async Task<Memory<NetworkData>> GetNetworkDataAsync(ReadOnlyMemory<string> data) 
         {
             int dataLength = data.Length;
             Memory<NetworkData> networkData = new NetworkData[dataLength];
@@ -71,6 +77,8 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
                     {
                         networkData.Span[i] = networkData.Span[(networkCount - 1)];
                         index++;
+
+                        yield return new NetworkInformation(currentNetwork, addressRanges[1]);
                     }
                 }
                 sliceCount++;
