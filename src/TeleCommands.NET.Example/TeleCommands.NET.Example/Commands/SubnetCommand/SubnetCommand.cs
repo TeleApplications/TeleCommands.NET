@@ -19,22 +19,22 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             ImmutableArray.Create<IOption<bool>>
             (
                 DataOption.FactoryValue,
-                DataOption.FactoryValue,
                 DataOption.FactoryValue
+                //DataOption.FactoryValue
             );
 
         public async Task<CommandResult> ExecuteCommandAsync(ReadOnlyMemory<OptionData> optionData)
         {
             var subnetDataOption = (Options[0] as DataOption);
             var addressDataOption = (Options[1] as DataOption);
-            var prefixDataOption = (Options[2] as DataOption);
+            //var prefixDataOption = (Options[2] as DataOption);
 
-            addressDataOption!.TryGetData(out ReadOnlyMemory<string> addressData, optionData.Span[0]);
-            prefixDataOption!.TryGetData(out ReadOnlyMemory<string> prefixData, optionData.Span[0]);
+            addressDataOption!.TryGetData(out ReadOnlyMemory<string> addressData, optionData.Span[1]);
+            //prefixDataOption!.TryGetData(out ReadOnlyMemory<string> prefixData, optionData.Span[0]);
             if (subnetDataOption!.TryGetData(out ReadOnlyMemory<string> subnetData, optionData.Span[0]).Value) 
             {
                 var networkData = await GetNetworkDataAsync(subnetData);
-                var networkInformation = CalculateNetworkSubnet(new SubnetInformation(addressData.Span[0], int.Parse(prefixData.Span[0])), networkData);
+                var networkInformation = CalculateNetworkSubnet(new SubnetInformation(addressData.Span[0], 24), networkData);
             }
 
 
@@ -51,7 +51,8 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
                 string currentData = data.Span[i];
                 int separatorIndex = await CommandHelper.GetFirstSeparatorIndexAsync(currentData.ToCharArray(), networkSeparator);
 
-                networkData.Span[i] = new NetworkData(currentData[0..(separatorIndex)], currentData[(separatorIndex)]);
+                int hostCount = int.Parse(currentData[(separatorIndex + 1)..]);
+                networkData.Span[i] = new NetworkData(currentData[0..(separatorIndex)], hostCount);
             }
             return networkData;
         }

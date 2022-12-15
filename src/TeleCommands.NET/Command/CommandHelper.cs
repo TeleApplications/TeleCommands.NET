@@ -36,13 +36,14 @@ namespace TeleCommands.NET
         private static async Task<ReadOnlyMemory<OptionData>> SeparateOptionsAsync(ReadOnlyMemory<char> commandData, ICommand<bool> command)
         {
             var optionsData = new List<OptionData>();
-            int lastIndex = 1;
+            int lastIndex = 0;
 
             var commandOptions = command.Options;
             for (int i = 0; i < commandOptions.Length; i++)
             {
                 if (lastIndex == commandData.Length)
                     return optionsData.ToArray();
+                lastIndex++;
 
                 ReadOnlyMemory<char> argument;
                 ReadOnlyMemory<char> optionData;
@@ -52,12 +53,12 @@ namespace TeleCommands.NET
                 //however I don't found it necessary. It's possible that this implementation
                 //will be changed
                 int firstSeparatorIndex = await GetFirstSeparatorIndexAsync(commandData[(lastIndex)..], optionBarrier.Start);
-                argument = commandData[(lastIndex)..(firstSeparatorIndex + 1)];
+                argument = commandData[(lastIndex)..((lastIndex + firstSeparatorIndex))];
                 lastIndex = firstSeparatorIndex + 2;
 
                 int secondSeparatorIndex = await GetFirstSeparatorIndexAsync(commandData[(lastIndex)..], optionBarrier.End);
-                optionData = commandData[(lastIndex)..(secondSeparatorIndex + (lastIndex))];
-                lastIndex = secondSeparatorIndex;
+                optionData = commandData[(lastIndex)..(secondSeparatorIndex + lastIndex)];
+                lastIndex += secondSeparatorIndex;
 
                 var currentData = new OptionData(argument, optionData);
                 optionsData.Add(currentData);
