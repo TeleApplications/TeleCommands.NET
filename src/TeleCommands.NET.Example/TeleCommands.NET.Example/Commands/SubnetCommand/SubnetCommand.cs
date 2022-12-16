@@ -19,24 +19,25 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             ImmutableArray.Create<IOption<bool>>
             (
                 DataOption.FactoryValue,
+                DataOption.FactoryValue,
                 DataOption.FactoryValue
-                //DataOption.FactoryValue
             );
 
         public async Task<CommandResult> ExecuteCommandAsync(ReadOnlyMemory<OptionData> optionData)
         {
             var subnetDataOption = (Options[0] as DataOption);
             var addressDataOption = (Options[1] as DataOption);
-            //var prefixDataOption = (Options[2] as DataOption);
+            var prefixDataOption = (Options[2] as DataOption);
 
             addressDataOption!.TryGetData(out ReadOnlyMemory<string> addressData, optionData.Span[1]);
-            //prefixDataOption!.TryGetData(out ReadOnlyMemory<string> prefixData, optionData.Span[0]);
+            prefixDataOption!.TryGetData(out ReadOnlyMemory<string> prefixData, optionData.Span[2]);
             if (subnetDataOption!.TryGetData(out ReadOnlyMemory<string> subnetData, optionData.Span[0]).Value) 
             {
                 var networkData = await GetNetworkDataAsync(subnetData);
-                var networkInformation = CalculateNetworkSubnet(new SubnetInformation(addressData.Span[0], 24), networkData);
-            }
 
+                int prefix = int.Parse(prefixData.Span[0]);
+                var networkInformation = CalculateNetworkSubnet(new SubnetInformation(addressData.Span[0], prefix), networkData);
+            }
 
             return null!;
         }
@@ -57,8 +58,9 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             return networkData;
         }
 
-        private IEnumerable<NetworkInformation> CalculateNetworkSubnet(SubnetInformation information, Memory<NetworkData> networkData)
+        private ReadOnlyMemory<NetworkInformation> CalculateNetworkSubnet(SubnetInformation information, Memory<NetworkData> networkData)
         {
+            Memory<NetworkInformation> networkInformations = new NetworkInformation[networkData.Length];
             //TODO: Create first check, if even the all networks fit
             //into the mask host length
             IPAddress baseBroadCast = CalculateBroadCast(information.IpAddress, information.Prefix);
@@ -74,20 +76,22 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
                 for (int i = 0; i < networkCount; i++)
                 {
                     var currentNetwork = networkData.Span[i];
-                    if (InIpRange(currentNetwork, addressRanges[1]))
+                    var currentRange = new IpRange(addressRanges[1].Start, addressRanges[1].End, information.Prefix + sliceCount);
+
+                    if (InIpRange(currentNetwork, currentRange))
                     {
                         networkData.Span[i] = networkData.Span[(networkCount - 1)];
+                        networkInformations.Span[index] = new NetworkInformation(currentNetwork, currentRange);
                         index++;
-
-                        yield return new NetworkInformation(currentNetwork, addressRanges[1]);
                     }
                 }
-                sliceCount++;
 
-                addressRanges[0].Start = CalculateBroadCast(addressRanges[0].Start, information.Prefix + sliceCount);
-                addressRanges[1].Start = CalculateBroadCast(addressRanges[0].End, information.Prefix + sliceCount);
+                sliceCount++;
                 addressRanges[1].End = addressRanges[0].End;
+                addressRanges[1].Start = CalculateBroadCast(addressRanges[0].End, information.Prefix + sliceCount);
+                addressRanges[0].End = CalculateBroadCast(addressRanges[0].Start, information.Prefix + sliceCount);
             }
+            return networkInformations;
         }
 
         private bool InIpRange(NetworkData data, IpRange addressRange) 

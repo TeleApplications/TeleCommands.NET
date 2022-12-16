@@ -43,7 +43,6 @@ namespace TeleCommands.NET
             {
                 if (lastIndex == commandData.Length)
                     return optionsData.ToArray();
-                lastIndex++;
 
                 ReadOnlyMemory<char> argument;
                 ReadOnlyMemory<char> optionData;
@@ -53,11 +52,11 @@ namespace TeleCommands.NET
                 //however I don't found it necessary. It's possible that this implementation
                 //will be changed
                 int firstSeparatorIndex = await GetFirstSeparatorIndexAsync(commandData[(lastIndex)..], optionBarrier.Start);
-                argument = commandData[(lastIndex)..((lastIndex + firstSeparatorIndex))];
-                lastIndex = firstSeparatorIndex + 2;
+                argument = commandData[(lastIndex + 1)..((firstSeparatorIndex + lastIndex))];
+                lastIndex += firstSeparatorIndex;
 
                 int secondSeparatorIndex = await GetFirstSeparatorIndexAsync(commandData[(lastIndex)..], optionBarrier.End);
-                optionData = commandData[(lastIndex)..(secondSeparatorIndex + lastIndex)];
+                optionData = commandData[(lastIndex + 1)..(secondSeparatorIndex + lastIndex)];
                 lastIndex += secondSeparatorIndex;
 
                 var currentData = new OptionData(argument, optionData);

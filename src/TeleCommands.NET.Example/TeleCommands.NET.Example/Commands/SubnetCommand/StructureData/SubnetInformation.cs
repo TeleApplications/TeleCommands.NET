@@ -21,9 +21,10 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand.StructureData
 
         public static IPAddress CalculateMask(int prefix)
         {
-            var maskBytes = defaultMask;
-            int prefixDifference = 32 - prefix;
+            Memory<byte> maskBytes = new byte[defaultMask.Length];
+            defaultMask.CopyTo(maskBytes);
 
+            int prefixDifference = 32 - prefix;
             int shiftValue = prefixDifference % byteSize;
             int maskShiftLenght = (prefixDifference - shiftValue) / byteSize;
             for (int i = 0; i < maskShiftLenght; i++)
