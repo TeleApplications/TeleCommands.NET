@@ -37,9 +37,23 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
 
                 int prefix = int.Parse(prefixData.Span[0]);
                 var networkInformation = CalculateNetworkSubnet(new SubnetInformation(addressData.Span[0], prefix), networkData);
+                WriteInformations(networkInformation);
             }
 
             return null!;
+        }
+        
+        //This is here just for temporary testing, because
+        //in a future, there is going to be better way of
+        //writing command content into the command line
+        private void WriteInformations(ReadOnlyMemory<NetworkInformation> informations) 
+        {
+            int informationLength = informations.Length;
+            for (int i = 0; i < informationLength; i++)
+            {
+                var currentSubnet = informations.Span[i];
+                Console.WriteLine(currentSubnet);
+            }
         }
 
         private async Task<Memory<NetworkData>> GetNetworkDataAsync(ReadOnlyMemory<string> data) 

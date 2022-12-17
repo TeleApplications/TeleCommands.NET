@@ -26,5 +26,8 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand.StructureData.NetworkS
             Network = network;
             AddressRange = range;
         }
+
+        public override string ToString() =>
+            $"Name: {Network.Name} \n Host: {Network.HostCount} \n Address: {AddressRange.Start} - {AddressRange.End} / {AddressRange.Prefix}";
     }
 }
