@@ -3,7 +3,7 @@
 namespace TeleCommands.NET.Handlers
 {
     public sealed class HandlerManager : IDisposable
-    {
+    { 
         public bool IsRunning { get; private set; } = true;
 
         private ReadOnlyMemory<IHandler> currentHandlers;
@@ -22,11 +22,13 @@ namespace TeleCommands.NET.Handlers
                 while (IsRunning)
                 {
                     int currentMillisecond = DateTime.Now.Millisecond;
-                    if (currentMillisecond > lastMilliseconds + 1000)
-                        IsRunning = false;
+                    int difference = Math.Abs(lastMilliseconds - currentMillisecond);
+                    if (currentMillisecond >= difference) 
+                    {
+                        await Task.WhenAll(handlersTask);
+                        lastMilliseconds = currentMillisecond;
+                    }
 
-                    await Task.WhenAll(handlersTask);
-                    lastMilliseconds = currentMillisecond;
                     await Task.Delay(1);
                 }
             });
