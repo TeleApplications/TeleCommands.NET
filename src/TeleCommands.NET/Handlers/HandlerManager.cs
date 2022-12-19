@@ -7,7 +7,8 @@ namespace TeleCommands.NET.Handlers
         public bool IsRunning { get; private set; } = true;
 
         private ReadOnlyMemory<IHandler> currentHandlers;
-        private int lastMilliseconds = 0;
+        private long lastTicks = 0;
+        private long tickDifference = 0;
 
         public HandlerManager(IHandler[] handlers) 
         {
@@ -20,20 +21,20 @@ namespace TeleCommands.NET.Handlers
             _ = Task.Run(async () =>
             {
                 while (IsRunning)
-                {
-                    int currentMillisecond = DateTime.Now.Millisecond;
-                    int difference = Math.Abs(lastMilliseconds - currentMillisecond);
-                    if (currentMillisecond >= difference) 
+                { 
+                    long currentTicks = DateTime.Now.Ticks;
+                    if (currentTicks >= lastTicks + tickDifference)
                     {
                         await Task.WhenAll(handlersTask);
-                        lastMilliseconds = currentMillisecond;
+                        lastTicks = currentTicks;
                     }
 
+                    tickDifference = (DateTime.Now.Ticks - currentTicks);
                     await Task.Delay(1);
                 }
             });
 
-            //TODO: Try to avoid this type of creating "echo" mode for
+            //TODO: Try to avoid this by creating an "echo" mode for
             //console input reading
             while (IsRunning) { Console.ReadLine(); };
         }
