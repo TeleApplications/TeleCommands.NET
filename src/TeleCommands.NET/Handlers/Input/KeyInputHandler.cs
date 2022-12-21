@@ -29,11 +29,10 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
                 invokeObject = await action.Action.Invoke(invokeObject);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         protected override async ValueTask<uint> GetInputAsync()
         {
             int halfKeyCount = (keyCount) / 2;
-
             for (int i = 0; i < halfKeyCount; i++)
             {
                 uint firstKey = virtualKeys[i];
@@ -49,7 +48,7 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
                     uint lastResult = (lastKey) * (uint)CalculatePositiveIndex((int)lastState);
                     uint finalResult = (firstResult | lastResult);
 
-                    if (finalResult != (uint)InputKey.Shift || finalResult != (uint)InputKey.Menu) 
+                    if (finalResult != (uint)InputKey.Shift || finalResult != (uint)InputKey.Menu)
                     {
                         bool shiftState = InteropHelper.GetAsyncKeyState((uint)InputKey.Shift) > 0;
                         bool altState = InteropHelper.GetAsyncKeyState((uint)InputKey.Menu) > 0;

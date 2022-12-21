@@ -74,9 +74,11 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
 
         private ReadOnlyMemory<NetworkInformation> CalculateNetworkSubnet(SubnetInformation information, Memory<NetworkData> networkData)
         {
+            int hostCount = CalculateHostCount(information.Prefix);
+            if (hostCount <= GetNetworkSize(networkData))
+                throw new OverflowException("Host count is greater than overall size of networks");
+
             Memory<NetworkInformation> networkInformations = new NetworkInformation[networkData.Length];
-            //TODO: Create first check, if even the all networks fit
-            //into the mask host length
             IPAddress baseBroadCast = CalculateBroadCast(information.IpAddress, information.Prefix);
             var baseRange = new IpRange(information.IpAddress, baseBroadCast, information.Prefix);
             IpRange[] addressRanges = { baseRange, baseRange};
@@ -108,9 +110,25 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             return networkInformations;
         }
 
+        private int GetNetworkSize(Memory<NetworkData> networkData) 
+        {
+            int returnSize = 0;
+            int networkLength = networkData.Length;
+            for (int i = 0; i < networkLength; i++)
+            {
+                var currentNetwork = networkData.Span[i];
+                returnSize += currentNetwork.HostCount;
+            }
+
+            return returnSize;
+        }
+
+        private int CalculateHostCount(int prefix) =>
+            (int)Math.Pow(2, (32 - prefix));
+
         private bool InIpRange(NetworkData data, IpRange addressRange) 
         {
-            int minHostCount = (int)Math.Pow(2, (32 - addressRange.Prefix)) / 2;
+            int minHostCount = CalculateHostCount(addressRange.Prefix) / 2;
             return data.HostCount > (minHostCount - 2);
         }
 
