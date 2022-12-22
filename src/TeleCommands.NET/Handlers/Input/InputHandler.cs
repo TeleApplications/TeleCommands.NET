@@ -35,6 +35,9 @@ namespace TeleCommands.NET.Handlers.Input
             }
         }
 
+        public virtual Task OnReadAsync() =>
+            Task.CompletedTask;
+
         public void Dispose() 
         {
             isListening = false;

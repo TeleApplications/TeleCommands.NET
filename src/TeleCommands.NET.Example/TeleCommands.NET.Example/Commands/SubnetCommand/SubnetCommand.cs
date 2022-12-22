@@ -78,12 +78,13 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
             if (hostCount <= GetNetworkSize(networkData))
                 throw new OverflowException("Host count is greater than overall size of networks");
 
+            int sliceCount = 1;
             Memory<NetworkInformation> networkInformations = new NetworkInformation[networkData.Length];
-            IPAddress baseBroadCast = CalculateBroadCast(information.IpAddress, information.Prefix);
-            var baseRange = new IpRange(information.IpAddress, baseBroadCast, information.Prefix);
+
+            IPAddress baseBroadCast = CalculateBroadCast(information.IpAddress, information.Prefix + sliceCount);
+            var baseRange = new IpRange(information.IpAddress, baseBroadCast, information.Prefix + sliceCount);
             IpRange[] addressRanges = { baseRange, baseRange};
 
-            int sliceCount = 0;
             int index = 0;
             int networkLength = networkData.Length;
             while (networkLength != index) 

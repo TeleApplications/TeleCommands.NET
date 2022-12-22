@@ -9,6 +9,7 @@ namespace TeleCommands.NET.Command
 {
     public sealed class CommandReader : IHandler, IDisposable
     {
+        public static readonly char defaultCommandSymbol = '>';
         private ReadOnlyMemory<KeyAction<CommandData>> keyActions =
             new KeyAction<CommandData>[]
             {
@@ -38,6 +39,16 @@ namespace TeleCommands.NET.Command
         public bool IsListening { get; set; } = true;
         public IntPtr Handle { get; }
 
+        //TODO: This will be also changed, due to creating
+        //a better implementation of writing to the console
+        //buffer
+        public Action OnReadAction { get; set; } = () =>
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write($"{defaultCommandSymbol} ");
+            Console.ForegroundColor = ConsoleColor.White;
+        };
+
         public CommandReader(Process process, int maxCommandLength)
         {
             commandData = new()
@@ -65,6 +76,8 @@ namespace TeleCommands.NET.Command
             await inputHandler.UpdateAsync();
         }
 
+        public async Task OnReadAsync() =>
+            OnReadAction.Invoke();
         public void Dispose() =>
             IsListening = false;
     }

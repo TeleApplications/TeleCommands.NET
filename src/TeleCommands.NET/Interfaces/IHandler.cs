@@ -5,5 +5,7 @@
         public IntPtr Handle { get; }
 
         public Task UpdateAsync();
+
+        public Task OnReadAsync();
     }
 }

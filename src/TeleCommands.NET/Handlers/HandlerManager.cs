@@ -17,7 +17,9 @@ namespace TeleCommands.NET.Handlers
 
         public async Task StartHandlersUpdateAsync() 
         {
-            var handlersTask = GetHandlersTask(currentHandlers);
+            var updateTasks = GetHandlersTask(currentHandlers, (IHandler handler) => handler.UpdateAsync());
+            var readTasks = GetHandlersTask(currentHandlers, (IHandler handler) => handler.OnReadAsync());
+
             _ = Task.Run(async () =>
             {
                 while (IsRunning)
@@ -25,7 +27,7 @@ namespace TeleCommands.NET.Handlers
                     long currentTicks = DateTime.Now.Ticks;
                     if (currentTicks >= lastTicks + tickDifference)
                     {
-                        await Task.WhenAll(handlersTask);
+                        await Task.WhenAll(updateTasks);
                         lastTicks = currentTicks;
                     }
 
@@ -33,18 +35,18 @@ namespace TeleCommands.NET.Handlers
                     await Task.Delay(1);
                 }
             });
-
+            
             //TODO: Try to avoid this by creating an "echo" mode for
             //console input reading
-            while (IsRunning) { Console.ReadLine(); };
+            while (IsRunning) { await Task.WhenAll(readTasks); Console.ReadLine(); };
         }
 
-        private IEnumerable<Task> GetHandlersTask(ReadOnlyMemory<IHandler> handlers)
+        private IEnumerable<Task> GetHandlersTask(ReadOnlyMemory<IHandler> handlers, Func<IHandler, Task> returnFunction)
         {
             int handlersCount = handlers.Length;
             for (int i = 0; i < handlersCount; i++)
             {
-                var currentHandlerTask = handlers.Span[i].UpdateAsync();
+                var currentHandlerTask = returnFunction(handlers.Span[i]);
                 yield return currentHandlerTask;
             }
         }
