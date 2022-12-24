@@ -34,7 +34,7 @@ namespace TeleCommands.NET.Command
             };
 
         private KeyInputHandler<CommandData> inputHandler;
-        private CommandData commandData;
+        public CommandData CommandData { get; }
 
         public bool IsListening { get; set; } = true;
         public IntPtr Handle { get; }
@@ -51,12 +51,12 @@ namespace TeleCommands.NET.Command
 
         public CommandReader(Process process, int maxCommandLength)
         {
-            commandData = new()
+            CommandData = new()
             {
                 OptionsData = new IndexMemory<char>(maxCommandLength)
             };
 
-            inputHandler = new(process, commandData);
+            inputHandler = new(process, CommandData);
             inputHandler.KeyActions = keyActions;
             Handle = inputHandler.Handle;
         }
@@ -69,7 +69,7 @@ namespace TeleCommands.NET.Command
             var currentKey = inputHandler.CurrentPressedKey;
             if (currentKey != (uint)InputKey.UnknownKey && currentKey != (uint)InputKey.Return)
             {
-                var optionsData = commandData.OptionsData;
+                var optionsData = CommandData.OptionsData;
                 optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
                 optionsData.Index++;
             }
