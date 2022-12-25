@@ -2,7 +2,7 @@
 using TeleCommands.NET.Command;
 using TeleCommands.NET.ConsoleInterface.Interfaces;
 using TeleCommands.NET.Handlers;
-
+using TeleCommands.NET.Handlers.Option.OptionHandlers.ColorOptionHandler;
 
 var currentProcess = Process.GetCurrentProcess();
 var handlerManager =
@@ -10,7 +10,7 @@ var handlerManager =
     {
         new CommandReader(currentProcess, 128)
         {
-            OnReadAction = () => 
+            OnReadAction = () =>
             {
                 Console.Write($"{DateTime.Now.ToShortTimeString()}");
                 Console.ForegroundColor = ConsoleColor.Blue;
@@ -18,6 +18,7 @@ var handlerManager =
                 Console.ForegroundColor = ConsoleColor.White;
             }
         },
+        new ColorAttributeHandler(currentProcess)
     });
 await handlerManager.StartHandlersUpdateAsync();
 Console.ReadLine();

@@ -1,4 +1,5 @@
-﻿using TeleCommands.NET.API.CommandOption.OptionStructs;
+﻿using System.Runtime.InteropServices;
+using TeleCommands.NET.API.CommandOption.OptionStructs;
 using TeleCommands.NET.Command.DataStructures;
 using TeleCommands.NET.CommandOption;
 using TeleCommands.NET.CommandOption.Interfaces;
@@ -28,13 +29,15 @@ namespace TeleCommands.NET
         private async Task<CommandData> GetCommandDataAsync(ReadOnlyMemory<char> data) 
         {
             int nameIndex = await CommandHelper.GetFirstSeparatorIndexAsync(data, emptyCharacter);
-            string name = data[0..nameIndex].ToString();
+            var name = data[0..nameIndex];
 
             int bufferLength = data.Length - nameIndex;
             var optionsData = new IndexMemory<char>(bufferLength);
             optionsData.Memory = data[(nameIndex + 1)..].ToArray();
 
-            return new CommandData(name, optionsData);
+            //TODO: Remove this expensive casting by just creating
+            //a better implementation of copying that memory in CommandReader
+            return new CommandData(MemoryMarshal.AsMemory(name), optionsData);
         }
     }
 }

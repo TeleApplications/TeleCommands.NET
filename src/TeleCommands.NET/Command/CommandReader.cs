@@ -10,15 +10,23 @@ namespace TeleCommands.NET.Command
     public sealed class CommandReader : IHandler, IDisposable
     {
         public static readonly char defaultCommandSymbol = '>';
+        //I'am still not sure about this type of implementation,
+        //it's possible that this will be changed
+        public static CommandData CommandData { get; private set; }
+
         private ReadOnlyMemory<KeyAction<CommandData>> keyActions =
             new KeyAction<CommandData>[]
             {
                 new KeyAction<CommandData>(ConsoleKey.Spacebar, (data) =>
                 {
-                    if(data.CommandName is null)
+                    if(data.CommandName.Length == 0)
                     {
                         int index = data.OptionsData.Index;
-                        data.CommandName = data.OptionsData.Memory[0..(index)].ToString();
+
+                        var currentMemory = data.OptionsData.Memory[0..(index)];
+                        data.CommandName = new char[currentMemory.Length];
+                        currentMemory.CopyTo(data.CommandName);
+
                         data.OptionsData.Index = 0;
                     }
                     return Task.FromResult(data);
@@ -27,14 +35,14 @@ namespace TeleCommands.NET.Command
                 {
                     await CommandHelper.RunCommandAsync(data);
 
-                    data.CommandName = null!;
+                    data.CommandName = new char[0];
                     data.OptionsData.Index = 0;
                     return data;
                 })
             };
 
         private KeyInputHandler<CommandData> inputHandler;
-        public CommandData CommandData { get; }
+        public CommandData indexCommandData;
 
         public bool IsListening { get; set; } = true;
         public IntPtr Handle { get; }
@@ -51,12 +59,12 @@ namespace TeleCommands.NET.Command
 
         public CommandReader(Process process, int maxCommandLength)
         {
-            CommandData = new()
+            indexCommandData = new()
             {
                 OptionsData = new IndexMemory<char>(maxCommandLength)
             };
 
-            inputHandler = new(process, CommandData);
+            inputHandler = new(process, indexCommandData);
             inputHandler.KeyActions = keyActions;
             Handle = inputHandler.Handle;
         }
@@ -69,11 +77,13 @@ namespace TeleCommands.NET.Command
             var currentKey = inputHandler.CurrentPressedKey;
             if (currentKey != (uint)InputKey.UnknownKey && currentKey != (uint)InputKey.Return)
             {
-                var optionsData = CommandData.OptionsData;
+                var optionsData = indexCommandData.OptionsData;
                 optionsData.Memory.Span[optionsData.Index] = (char)currentKey;
                 optionsData.Index++;
             }
+
             await inputHandler.UpdateAsync();
+            CommandData = inputHandler.InvokeObject;
         }
 
         public async Task OnReadAsync() =>

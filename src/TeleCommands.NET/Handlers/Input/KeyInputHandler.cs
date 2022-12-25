@@ -14,19 +14,19 @@ namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
             (typeof(InputKey).GetEnumValues() as uint[])!;
 
         private readonly int keyCount = (byte.MaxValue ^ 87);
-        private T invokeObject;
 
+        public T InvokeObject { get; set; }
         public ReadOnlyMemory<KeyAction<T>> KeyActions { get; set; }
 
         public KeyInputHandler(Process process, T invokeObject) : base(process)
         {
-            this.invokeObject = invokeObject;
+            this.InvokeObject = invokeObject;
         }
 
         protected override async Task OnInputAsync(uint key)
         {
             if (TryGetCurrentKeyAction(out KeyAction<T> action, key))
-                invokeObject = await action.Action.Invoke(invokeObject);
+                InvokeObject = await action.Action.Invoke(InvokeObject);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]

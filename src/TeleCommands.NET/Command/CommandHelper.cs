@@ -18,7 +18,7 @@ namespace TeleCommands.NET
 
         public static async Task<CommandResult> RunCommandAsync(CommandData commandData) 
         {
-            if (!TryGetCommandAttribute(out CommandAttribute attribute, commandData.CommandName))
+            if (!TryGetCommandAttribute(out CommandAttribute attribute, commandData.CommandName.ToString()))
                 return unknownCommandResult;
 
             var commandInstance = (ICommand<bool>)Activator.CreateInstance(attribute.Type)!;
