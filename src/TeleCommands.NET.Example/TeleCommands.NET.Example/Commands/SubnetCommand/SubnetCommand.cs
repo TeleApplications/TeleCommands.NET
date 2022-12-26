@@ -6,6 +6,7 @@ using TeleCommands.NET.CommandOption.OptionStructs;
 using TeleCommands.NET.Example.Commands.SubnetCommand.Options;
 using TeleCommands.NET.Example.Commands.SubnetCommand.StructureData;
 using TeleCommands.NET.Example.Commands.SubnetCommand.StructureData.NetworkStructure;
+using TeleCommands.NET.Handlers.Option.OptionHandlers.ColorHandler.Attributes;
 using TeleCommands.NET.Interfaces;
 
 namespace TeleCommands.NET.Example.Commands.SubnetCommand
@@ -15,6 +16,7 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
     {
         private static readonly char networkSeparator = '=';
 
+        [ColorOption(ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue)]
         public ImmutableArray<IOption<bool>> Options { get; } =
             ImmutableArray.Create<IOption<bool>>
             (

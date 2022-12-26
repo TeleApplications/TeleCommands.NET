@@ -29,6 +29,8 @@ namespace TeleCommands.NET.Command
 
                         data.OptionsData.Index = 0;
                     }
+
+                    data.OptionIndex++;
                     return Task.FromResult(data);
                 }),
                 new KeyAction<CommandData>(ConsoleKey.Enter, async(data) =>
