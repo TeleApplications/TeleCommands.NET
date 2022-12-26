@@ -1,7 +1,10 @@
-# TeleCommands.NET
+<h1 align="center"">TeleCommands.NET</h1>
+<p align="center">
+  <img src="assets/TeleCommands.NET-Logo.png">
+  
+</p>
 An abstract command library with versatile abstraction for creating new commands that includes a lot of options by your choose
 
----
 ## TODO
 - [x] Support for multiple commands in one line
 - [ ] Proper documentation in a code with at least 5 examples
