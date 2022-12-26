@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Reflection;
 using TeleCommands.NET.Attributes;
 using TeleCommands.NET.Command;
 using TeleCommands.NET.Command.DataStructures;
@@ -24,7 +23,7 @@ namespace TeleCommands.NET.Handlers.Option
         private ReadOnlyMemory<TSource> GetOptionAttributeData(Type commandType) 
         {
             var optionProperty = commandType.GetProperty(optionsPropertyName);
-            int optionsLength = CalculateOptionsLength(optionProperty!, commandType);
+            int optionsLength = CalculateOptionsLength(commandType);
 
             var attributes = optionProperty!.GetCustomAttributes(typeof(T), true) as T[];
             Memory<TSource> returnData = new TSource[optionsLength];
@@ -39,7 +38,7 @@ namespace TeleCommands.NET.Handlers.Option
             return returnData;
         }
 
-        private int CalculateOptionsLength(PropertyInfo property, Type commandType) 
+        private int CalculateOptionsLength(Type commandType) 
         {
             var currentCommand = (ICommand<bool>)Activator.CreateInstance(commandType)!;
             return currentCommand.Options.Length;
