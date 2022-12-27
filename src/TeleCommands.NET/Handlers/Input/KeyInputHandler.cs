@@ -1,11 +1,9 @@
-﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 using TeleCommands.NET.Handlers.Enums;
-using TeleCommands.NET.Handlers.Input;
 
-namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
+namespace TeleCommands.NET.Handlers.Input
 {
     public sealed class KeyInputHandler<T> : InputHandler where T : new()
     {

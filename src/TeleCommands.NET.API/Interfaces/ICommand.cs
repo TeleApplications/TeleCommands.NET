@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
 using TeleCommands.NET.API.CommandOption.Results;
-using TeleCommands.NET.CommandOption.OptionStructs;
+using TeleCommands.NET.API.CommandOption.OptionStructs;
 
-namespace TeleCommands.NET.Interfaces
+namespace TeleCommands.NET.API.Interfaces
 {
     public interface ICommand<T>
     {

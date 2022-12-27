@@ -1,4 +1,6 @@
-﻿namespace TeleCommands.NET.Handlers.Option.OptionHandlers.ColorHandler.Attributes
+﻿using TeleCommands.NET.Handlers.Option.Interfaces;
+
+namespace TeleCommands.NET.Handlers.Option.OptionHandlers.ColorHandler.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class ColorOptionAttribute : Attribute, IOptionAttribute<ConsoleColor>

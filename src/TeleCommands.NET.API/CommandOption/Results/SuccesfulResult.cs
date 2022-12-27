@@ -1,6 +1,6 @@
-﻿using TeleCommands.NET.CommandOption.Interfaces;
+﻿using TeleCommands.NET.API.CommandOption.Interfaces;
 
-namespace TeleCommands.NET.CommandOption.Results
+namespace TeleCommands.NET.API.CommandOption.Results
 {
     public sealed class SuccesfulResult<T> : IResult<T>
     {

@@ -1,5 +1,4 @@
-﻿
-namespace TeleCommands.NET.Handlers.Enums
+﻿namespace TeleCommands.NET.Handlers.Enums
 {
     //This enum of all useable virtual keys
     //will not be possible, without pinvoke

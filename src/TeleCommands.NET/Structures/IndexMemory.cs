@@ -1,4 +1,4 @@
-﻿namespace TeleCommands.NET.ConsoleInterface.Structs
+﻿namespace TeleCommands.NET.Structures
 {
     public sealed class IndexMemory<T>
     {

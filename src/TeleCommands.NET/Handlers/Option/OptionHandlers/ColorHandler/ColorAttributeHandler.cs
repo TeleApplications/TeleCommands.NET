@@ -1,7 +1,6 @@
-﻿using System.Diagnostics;
-using TeleCommands.NET.Handlers.Option.OptionHandlers.ColorHandler.Attributes;
+﻿using TeleCommands.NET.Handlers.Option.OptionHandlers.ColorHandler.Attributes;
 
-namespace TeleCommands.NET.Handlers.Option.OptionHandlers.ColorOptionHandler
+namespace TeleCommands.NET.Handlers.Option.OptionHandlers.ColorHandler
 {
     //This is not actually a best example of this attribute handler,
     //but in a future it will containg more options for multiple colors

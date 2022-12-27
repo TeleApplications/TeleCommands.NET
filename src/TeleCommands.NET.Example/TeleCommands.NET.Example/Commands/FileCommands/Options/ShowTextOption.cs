@@ -1,6 +1,5 @@
-﻿using TeleCommands.NET.CommandOption;
-using TeleCommands.NET.CommandOption.Interfaces;
-using TeleCommands.NET.CommandOption.OptionStructs;
+﻿using TeleCommands.NET.API.CommandOption.Interfaces;
+using TeleCommands.NET.API.CommandOption.OptionStructs;
 
 namespace TeleCommands.NET.Example.Commands.FileCommands.Options
 {

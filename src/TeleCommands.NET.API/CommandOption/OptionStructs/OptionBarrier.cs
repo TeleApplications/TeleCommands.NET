@@ -1,5 +1,4 @@
-﻿
-namespace TeleCommands.NET.API.CommandOption.OptionStructs
+﻿namespace TeleCommands.NET.API.CommandOption.OptionStructs
 {
     public readonly struct OptionBarrier
     {

@@ -1,4 +1,6 @@
-﻿namespace TeleCommands.NET.Handlers.Option.OptionHandlers.InformationHandler.Attributes
+﻿using TeleCommands.NET.Handlers.Option.Interfaces;
+
+namespace TeleCommands.NET.Handlers.Option.OptionHandlers.InformationHandler.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class InformationOptionAttribute : Attribute, IOptionAttribute<string>

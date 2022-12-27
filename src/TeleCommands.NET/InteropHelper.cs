@@ -3,7 +3,6 @@ using System.Text;
 
 namespace TeleCommands.NET
 {
-    internal delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
     public static class InteropHelper
     {
         [DllImport("user32.dll")]

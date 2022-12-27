@@ -1,12 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using TeleCommands.NET.API.CommandOption.OptionStructs;
-using TeleCommands.NET.CommandOption.Interfaces;
-using TeleCommands.NET.CommandOption.OptionStructs;
-using TeleCommands.NET.CommandOption.Results;
-using TeleCommands.NET.Interfaces;
+using TeleCommands.NET.API.CommandOption.Interfaces;
+using TeleCommands.NET.API.CommandOption.Results;
+using TeleCommands.NET.API.Interfaces;
 
-namespace TeleCommands.NET.CommandOption
+namespace TeleCommands.NET.API.CommandOption
 {
     public class Option<T, TSource> : Factory<T>, IOption<TSource>
         where T : Option<T, TSource>, new()

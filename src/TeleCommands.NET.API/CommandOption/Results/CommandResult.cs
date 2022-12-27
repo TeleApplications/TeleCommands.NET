@@ -1,4 +1,4 @@
-﻿using TeleCommands.NET.CommandOption.Interfaces;
+﻿using TeleCommands.NET.API.CommandOption.Interfaces;
 
 namespace TeleCommands.NET.API.CommandOption.Results
 {

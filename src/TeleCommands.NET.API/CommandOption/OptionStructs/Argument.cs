@@ -1,4 +1,4 @@
-﻿namespace TeleCommands.NET.CommandOption
+﻿namespace TeleCommands.NET.API.CommandOption.OptionStructs
 {
     public readonly struct Argument
     {

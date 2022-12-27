@@ -1,10 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using TeleCommands.NET.API.CommandOption.OptionStructs;
 using TeleCommands.NET.Command.DataStructures;
-using TeleCommands.NET.CommandOption;
-using TeleCommands.NET.CommandOption.Interfaces;
-using TeleCommands.NET.CommandOption.OptionStructs;
-using TeleCommands.NET.ConsoleInterface.Structs;
+using TeleCommands.NET.API.CommandOption;
+using TeleCommands.NET.API.CommandOption.Interfaces;
+using TeleCommands.NET.Command;
+using TeleCommands.NET.Structures;
 
 namespace TeleCommands.NET
 {

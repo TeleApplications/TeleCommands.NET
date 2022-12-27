@@ -1,4 +1,4 @@
-﻿namespace TeleCommands.NET.CommandOption.OptionStructs
+﻿namespace TeleCommands.NET.API.CommandOption.OptionStructs
 {
     public readonly struct OptionData
     {

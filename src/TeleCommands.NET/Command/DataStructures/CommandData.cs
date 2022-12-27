@@ -1,4 +1,4 @@
-﻿using TeleCommands.NET.ConsoleInterface.Structs;
+﻿using TeleCommands.NET.Structures;
 
 namespace TeleCommands.NET.Command.DataStructures
 {

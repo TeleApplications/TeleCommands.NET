@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
 using TeleCommands.NET.API.CommandOption.Results;
-using TeleCommands.NET.Attributes;
-using TeleCommands.NET.CommandOption.OptionStructs;
-using TeleCommands.NET.Interfaces;
+using TeleCommands.NET.API.Attributes;
+using TeleCommands.NET.API.CommandOption.OptionStructs;
+using TeleCommands.NET.API.Interfaces;
 
 namespace TeleCommands.NET.Example.Commands.FileCommands
 {

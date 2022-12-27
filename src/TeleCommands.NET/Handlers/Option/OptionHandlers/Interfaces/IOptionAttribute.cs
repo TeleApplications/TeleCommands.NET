@@ -1,4 +1,4 @@
-﻿namespace TeleCommands.NET.Handlers.Option
+﻿namespace TeleCommands.NET.Handlers.Option.Interfaces
 {
     public interface IOptionAttribute<T>
     {

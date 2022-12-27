@@ -1,9 +1,7 @@
 ﻿using TeleCommands.NET.API.CommandOption.OptionStructs;
-using TeleCommands.NET.CommandOption;
-using TeleCommands.NET.CommandOption.Interfaces;
-using TeleCommands.NET.CommandOption.OptionStructs;
+using TeleCommands.NET.API.CommandOption.Interfaces;
 
-namespace TeleCommands.NET.Interfaces
+namespace TeleCommands.NET.API.Interfaces
 {
     public interface IOption<T>
     {

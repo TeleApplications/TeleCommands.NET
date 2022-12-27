@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using TeleCommands.NET.Command.DataStructures;
-using TeleCommands.NET.ConsoleInterface.Handlers.Input;
-using TeleCommands.NET.ConsoleInterface.Interfaces;
-using TeleCommands.NET.ConsoleInterface.Structs;
+﻿using TeleCommands.NET.Handlers.Input;
 using TeleCommands.NET.Handlers.Enums;
+using TeleCommands.NET.Command.DataStructures;
+using TeleCommands.NET.Structures;
 
 namespace TeleCommands.NET.Command
 {
@@ -44,7 +42,7 @@ namespace TeleCommands.NET.Command
             };
 
         private KeyInputHandler<CommandData> inputHandler;
-        public CommandData indexCommandData;
+        private CommandData indexCommandData;
 
         public bool IsListening { get; set; } = true;
         public IntPtr Handle { get; }
@@ -52,11 +50,13 @@ namespace TeleCommands.NET.Command
         //TODO: This will be also changed, due to creating
         //a better implementation of writing to the console
         //buffer
-        public Action OnReadAction { get; set; } = () =>
+        public Func<Task> OnReadAction { get; set; } = async() =>
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Write($"{defaultCommandSymbol} ");
             Console.ForegroundColor = ConsoleColor.White;
+
+            await Task.CompletedTask;
         };
 
         public CommandReader(Process process, int maxCommandLength)
@@ -89,7 +89,7 @@ namespace TeleCommands.NET.Command
         }
 
         public async Task OnReadAsync() =>
-            OnReadAction.Invoke();
+            await OnReadAction.Invoke();
         public void Dispose() =>
             IsListening = false;
     }

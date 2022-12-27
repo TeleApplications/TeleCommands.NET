@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-using TeleCommands.NET.Attributes;
+﻿using TeleCommands.NET.API.Attributes;
+using TeleCommands.NET.API.Interfaces;
 using TeleCommands.NET.Command;
 using TeleCommands.NET.Command.DataStructures;
-using TeleCommands.NET.ConsoleInterface.Interfaces;
-using TeleCommands.NET.Interfaces;
+using TeleCommands.NET.Handlers.Option.Interfaces;
 
 namespace TeleCommands.NET.Handlers.Option
 {

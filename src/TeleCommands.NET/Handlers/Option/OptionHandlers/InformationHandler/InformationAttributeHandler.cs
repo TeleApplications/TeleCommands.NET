@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using TeleCommands.NET.Handlers.Option.OptionHandlers.InformationHandler.Attributes;
+﻿using TeleCommands.NET.Handlers.Option.OptionHandlers.InformationHandler.Attributes;
 
 namespace TeleCommands.NET.Handlers.Option.OptionHandlers.InformationHandler
 {

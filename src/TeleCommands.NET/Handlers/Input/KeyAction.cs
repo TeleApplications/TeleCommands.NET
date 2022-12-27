@@ -1,4 +1,4 @@
-﻿namespace TeleCommands.NET.ConsoleInterface.Handlers.Input
+﻿namespace TeleCommands.NET.Handlers.Input
 {
     public readonly struct KeyAction<T>
     {

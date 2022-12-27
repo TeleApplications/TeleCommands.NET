@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using TeleCommands.NET.ConsoleInterface.Interfaces;
-using TeleCommands.NET.Handlers.Enums;
+﻿using TeleCommands.NET.Handlers.Enums;
 
 namespace TeleCommands.NET.Handlers.Input
 {

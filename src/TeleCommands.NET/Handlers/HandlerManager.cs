@@ -1,6 +1,4 @@
-﻿using TeleCommands.NET.ConsoleInterface.Interfaces;
-
-namespace TeleCommands.NET.Handlers
+﻿namespace TeleCommands.NET.Handlers
 {
     public sealed class HandlerManager : IDisposable
     { 

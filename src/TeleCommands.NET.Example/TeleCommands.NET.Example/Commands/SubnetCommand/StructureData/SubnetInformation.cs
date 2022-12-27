@@ -5,7 +5,7 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand.StructureData
     internal sealed class SubnetInformation
     {
         private static readonly int byteSize = 8;
-        private static readonly Memory<byte> defaultMask =
+        private static ReadOnlySpan<byte> defaultMask =>
             new byte[] { 255, 255, 255, 255 };
 
         public IPAddress IpAddress { get; }
@@ -21,7 +21,7 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand.StructureData
 
         public static IPAddress CalculateMask(int prefix)
         {
-            Memory<byte> maskBytes = new byte[defaultMask.Length];
+            Span<byte> maskBytes = stackalloc byte[defaultMask.Length];
             defaultMask.CopyTo(maskBytes);
 
             int prefixDifference = 32 - prefix;
@@ -30,11 +30,11 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand.StructureData
             for (int i = 0; i < maskShiftLenght; i++)
             {
                 int currentIndex = (defaultMask.Length - 1) - i;
-                maskBytes.Span[currentIndex] = (byte)(maskBytes.Span[currentIndex] >> byteSize);
+                maskBytes[currentIndex] = (byte)(maskBytes[currentIndex] >> byteSize);
             }
 
             int lastIndex = defaultMask.Length - (maskShiftLenght + 1);
-            maskBytes.Span[lastIndex] = (byte)(maskBytes.Span[lastIndex] & (maskBytes.Span[lastIndex] << shiftValue));
+            maskBytes[lastIndex] = (byte)(maskBytes[lastIndex] & (maskBytes[lastIndex] << shiftValue));
             return new IPAddress(maskBytes.ToArray());
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace TeleCommands.NET.Attributes
+﻿namespace TeleCommands.NET.API.Attributes
 {
     [AttributeUsage(AttributeTargets.Class)]
     public sealed class CommandAttribute : Attribute
