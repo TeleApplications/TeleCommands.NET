@@ -8,6 +8,7 @@ namespace TeleCommands.NET.Command
     public sealed class CommandReader : IHandler, IDisposable
     {
         public static readonly char defaultCommandSymbol = '>';
+        private static readonly char emptyCharacter = ' ';
         //I'am still not sure about this type of implementation,
         //it's possible that this will be changed
         public static CommandData CommandData { get; private set; }
@@ -20,11 +21,10 @@ namespace TeleCommands.NET.Command
                     if(data.CommandName.Length == 0)
                     {
                         int index = data.OptionsData.Index;
-
                         var currentMemory = data.OptionsData.Memory[0..(index)];
+
                         data.CommandName = new char[currentMemory.Length];
                         currentMemory.CopyTo(data.CommandName);
-
                         data.OptionsData.Index = 0;
                     }
 
@@ -35,10 +35,24 @@ namespace TeleCommands.NET.Command
                 {
                     await CommandHelper.RunCommandAsync(data);
 
+                    //TODO: Create default value of this struct
                     data.CommandName = new char[0];
                     data.OptionsData.Index = 0;
+                    data.OptionIndex = 0;
                     return data;
-                })
+                }),
+                new KeyAction<CommandData>(ConsoleKey.Backspace, (data) =>
+                {
+                    if(data.OptionsData.Index == 0)
+                        return Task.FromResult(data);
+                    var optionData = data.OptionsData;
+                    optionData.Index--;
+
+                    char nextCharacter = optionData.Memory.Span[optionData.Index];
+                    if(nextCharacter == emptyCharacter)
+                        data.OptionIndex--;
+                    return Task.FromResult(data);
+                }),
             };
 
         private KeyInputHandler<CommandData> inputHandler;
@@ -77,7 +91,7 @@ namespace TeleCommands.NET.Command
                 return;
 
             var currentKey = inputHandler.CurrentPressedKey;
-            if (currentKey != (uint)InputKey.UnknownKey && currentKey != (uint)InputKey.Return)
+            if (currentKey != (uint)InputKey.UnknownKey && currentKey != (uint)InputKey.Return && currentKey != (uint)InputKey.Back)
             {
                 var optionsData = indexCommandData.OptionsData;
                 optionsData.Memory.Span[optionsData.Index] = (char)currentKey;

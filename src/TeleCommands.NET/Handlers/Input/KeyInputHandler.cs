@@ -95,6 +95,8 @@ namespace TeleCommands.NET.Handlers.Input
             return currentKeyAction.Action is not null;
         }
 
+        //TODO: Create a vectorized implementation
+        //of this method
         private KeyAction<T> GetCurrentKeyAction(uint key)
         {
             byte keyByte = (byte)key;
@@ -103,7 +105,7 @@ namespace TeleCommands.NET.Handlers.Input
             for (int i = 0; i < keyActionsLength; i++)
             {
                 byte currentByte = (byte)KeyActions.Span[i].Key;
-                if ((keyByte & currentByte) == keyByte)
+                if (currentByte == keyByte)
                     return KeyActions.Span[i];
             }
             return default;

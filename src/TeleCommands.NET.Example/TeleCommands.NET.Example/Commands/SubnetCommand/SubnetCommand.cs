@@ -18,8 +18,8 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand
     {
         private static readonly char networkSeparator = '=';
 
-        [ColorOption(ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue)] 
-        [InformationOption("--[A=257,B=127000,C=800]--", "--[10.0.0.0-192.168.255.255]--", "--[1-31]--")]
+        [ColorOption(ConsoleColor.DarkRed, ConsoleColor.DarkBlue, ConsoleColor.DarkBlue)]
+        [InformationOption("--[A=257,B=127000,C=800]--", "IPAddress:", "Prefix:")]
         public ImmutableArray<IOption<bool>> Options { get; } =
             ImmutableArray.Create<IOption<bool>>
             (

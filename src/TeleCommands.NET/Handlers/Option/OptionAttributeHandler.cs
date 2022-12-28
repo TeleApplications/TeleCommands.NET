@@ -55,8 +55,13 @@ namespace TeleCommands.NET.Handlers.Option
                 lastCommandData.CommandName = currentData.CommandName;
             }
 
+            //Actually I don't this type of checking, so
+            //it's possible that it will be changed by
+            //more complex system, that will not contain
+            //this unnecessary state checking
             int currentIndex = currentData.OptionIndex;
-            if (currentIndex > lastCommandData.OptionIndex) 
+            int nameLength = currentData.CommandName.Length;
+            if (currentIndex != lastCommandData.OptionIndex && nameLength > 0)
             {
                 var currentAttributeData = attributeData.Span[currentIndex - 1];
                 await OnOptionAttributeAsync(currentAttributeData);
