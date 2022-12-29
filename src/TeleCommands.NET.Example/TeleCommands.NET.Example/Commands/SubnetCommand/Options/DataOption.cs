@@ -9,9 +9,8 @@ namespace TeleCommands.NET.Example.Commands.SubnetCommand.Options
 {
     internal sealed class DataOption : Option<DataOption, bool>
     {
-        public static readonly char DefaultDataSeparator = ',';
-
         private char dataSeparator = DefaultDataSeparator;
+        public static readonly char DefaultDataSeparator = ',';
 
         public override ReadOnlyMemory<Argument> Arguments => base.Arguments;
         public override OptionBarrier CharacterBarrier { get; } =

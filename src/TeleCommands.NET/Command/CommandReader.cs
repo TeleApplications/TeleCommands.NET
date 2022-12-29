@@ -2,6 +2,7 @@
 using TeleCommands.NET.Handlers.Enums;
 using TeleCommands.NET.Command.DataStructures;
 using TeleCommands.NET.Structures;
+using System.Runtime.CompilerServices;
 
 namespace TeleCommands.NET.Command
 {
@@ -85,6 +86,7 @@ namespace TeleCommands.NET.Command
             Handle = inputHandler.Handle;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public async Task UpdateAsync()
         {
             if (!IsListening)

@@ -8,7 +8,6 @@ namespace TeleCommands.NET.Command.DataStructures
         public IndexMemory<char> OptionsData { get; set; }
         public int OptionIndex { get; set; } = 0;
 
-
         public CommandData(Memory<char> commandName, IndexMemory<char> optionsData) 
         {
             CommandName = commandName;

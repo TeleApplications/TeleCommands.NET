@@ -11,14 +11,14 @@ namespace TeleCommands.NET.Handlers.Input
         private static readonly uint[] virtualKeys =
             (typeof(InputKey).GetEnumValues() as uint[])!;
 
-        private readonly int keyCount = (byte.MaxValue ^ 87);
+        private static readonly int keyCount = (byte.MaxValue ^ 87);
 
         public T InvokeObject { get; set; }
         public ReadOnlyMemory<KeyAction<T>> KeyActions { get; set; }
 
         public KeyInputHandler(Process process, T invokeObject) : base(process)
         {
-            this.InvokeObject = invokeObject;
+            InvokeObject = invokeObject;
         }
 
         protected override async Task OnInputAsync(uint key)
