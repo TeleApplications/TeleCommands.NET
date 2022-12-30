@@ -3,9 +3,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using TeleCommands.NET.API.CommandOption.Results;
 using TeleCommands.NET.API.Attributes;
-using TeleCommands.NET.Command.DataStructures;
 using TeleCommands.NET.API.CommandOption.OptionStructs;
 using TeleCommands.NET.API.Interfaces;
+using TeleCommands.NET.Command.DataStructures;
 
 namespace TeleCommands.NET.Command
 {
@@ -13,7 +13,7 @@ namespace TeleCommands.NET.Command
     {
         private static readonly CommandResult unknownCommandResult =
             new(null) { Message = "Command was not found" };
-        private static ImmutableArray<CommandAttribute> commandAttributes =
+        public static ImmutableArray<CommandAttribute> CommandAttributes { get; } =
             ImmutableArray.CreateRange(GetCommandAttributes(AppDomain.CurrentDomain.GetAssemblies()));
 
         public static async Task<CommandResult> RunCommandAsync(CommandData commandData) 

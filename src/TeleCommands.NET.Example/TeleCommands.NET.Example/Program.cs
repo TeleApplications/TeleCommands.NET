@@ -21,7 +21,7 @@ var handlerManager =
             }
         },
         new ColorAttributeHandler(currentProcess),
-        new InformationAttributeHandler(currentProcess, ConsoleColor.DarkGray)
+        //new InformationAttributeHandler(currentProcess, ConsoleColor.DarkGray)
     });
 await handlerManager.StartHandlersUpdateAsync();
 Console.ReadLine();

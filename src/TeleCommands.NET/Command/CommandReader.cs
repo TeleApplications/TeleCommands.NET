@@ -1,8 +1,8 @@
-﻿using TeleCommands.NET.Handlers.Input;
+﻿using System.Runtime.CompilerServices;
+using TeleCommands.NET.Handlers.Input;
 using TeleCommands.NET.Handlers.Enums;
 using TeleCommands.NET.Command.DataStructures;
 using TeleCommands.NET.Structures;
-using System.Runtime.CompilerServices;
 
 namespace TeleCommands.NET.Command
 {
