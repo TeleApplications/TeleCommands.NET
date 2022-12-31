@@ -26,10 +26,9 @@ namespace TeleCommands.NET.Handlers.Command
             var optionData = currentCommandData.OptionsData;
             var currentOptionData = optionData.Memory[0..(optionData.Index)];
 
-            //Maybe I should compare them by their length
-            if (!(currentOptionData.Equals(lastCommandMemory))) 
+            int optionDataLength = currentOptionData.Length;
+            if (optionDataLength != lastCommandMemory.Length)
             {
-                int optionDataLength = currentOptionData.Length;
                 //TODO: Change it to normal array, instead of
                 //creating new instance of memory
                 lastCommandMemory = new char[optionDataLength];

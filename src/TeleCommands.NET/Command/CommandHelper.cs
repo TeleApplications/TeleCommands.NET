@@ -80,10 +80,10 @@ namespace TeleCommands.NET.Command
         //TODO: Create vertorized type of this method
         public static bool TryGetCommandAttribute(out CommandAttribute attribute, string commandName) 
         {
-            int commandCount = commandAttributes.Length;
+            int commandCount = CommandAttributes.Length;
             for (int i = 0; i < commandCount; i++)
             {
-                var currentAttribute = commandAttributes[i];
+                var currentAttribute = CommandAttributes[i];
                 if (currentAttribute.Name == commandName) 
                 {
                     attribute = currentAttribute;
