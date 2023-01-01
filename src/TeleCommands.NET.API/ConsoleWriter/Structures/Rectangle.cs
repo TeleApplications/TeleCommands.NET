@@ -7,6 +7,9 @@
         public int Right { get; set; }
         public int Bottom { get; set; }
 
+        public static Rectangle Zero =>
+            new(0, 0, 0, 0);
+
         public Rectangle(int top, int left, int right, int bottom) 
         {
             Top = top;
@@ -14,8 +17,5 @@
             Right = right;
             Bottom = bottom;
         }
-
-        public static Rectangle Zero =>
-            new(0, 0, 0, 0);
     }
 }
