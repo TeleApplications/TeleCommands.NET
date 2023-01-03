@@ -7,6 +7,6 @@ namespace TeleCommands.NET.API.ConsoleWriter.Interfaces
         public Rectangle Rectangle { get; }
         public Memory<char> CharacterBuffer { get; }
 
-        public Task Write(char character, Coordination position);
+        public Task WriteAsync(char character, Coordination position);
     }
 }
