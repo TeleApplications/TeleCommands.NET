@@ -1,12 +1,17 @@
 ﻿using TeleCommands.NET.API.ConsoleWriter.Structures;
+using TeleCommands.NET.API.ConsoleWriter.Structures.Character;
 
 namespace TeleCommands.NET.API.ConsoleWriter.Interfaces
 {
     internal interface IWriter
     {
         public Rectangle Rectangle { get; }
-        public Memory<char> CharacterBuffer { get; }
+        public Memory<CharacterInformation> CharacterBuffer { get; }
 
-        public Task WriteAsync(char character, Coordination position);
+        public void Write(char character, Coordination position, CharacterColor color);
+
+        public void Display();
+
+        public void Clear();
     }
 }

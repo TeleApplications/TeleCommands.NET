@@ -5,7 +5,7 @@
         public ConsoleColor ForegroundColor { get; set; }
         public ConsoleColor BackgroundColor { get; set; }
 
-        public static CharacterColor DefaultColor =>
+        public static readonly CharacterColor DefaultColor =
             new(ConsoleColor.White, ConsoleColor.Black);
 
         public CharacterColor(ConsoleColor foregroundColor, ConsoleColor backgroundColor) 

@@ -1,6 +1,6 @@
 ﻿namespace TeleCommands.NET.API.ConsoleWriter.Structures.Character
 {
-    internal struct CharacterInformation
+    public struct CharacterInformation
     {
         public char Character { get; set; }
         public short Attribute { get; set; }
