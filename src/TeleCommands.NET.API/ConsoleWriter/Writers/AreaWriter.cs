@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using TeleCommands.NET.API.ConsoleWriter.Interfaces;
 using TeleCommands.NET.API.ConsoleWriter.Structures;
 using TeleCommands.NET.API.ConsoleWriter.Structures.Character;
+using TeleCommands.NET.API.ConsoleWriter.Writers.Structures;
 
 namespace TeleCommands.NET.API.ConsoleWriter.Writers
 {
@@ -12,21 +13,19 @@ namespace TeleCommands.NET.API.ConsoleWriter.Writers
         private const string ReadName = "CONOUT$";
 
         private SafeFileHandle fileHandle;
-        private Coordination areaPosition;
-        private Coordination areaSize;
+        private Area bufferArea;
 
         public Rectangle Rectangle { get; private set; }
         public Memory<CharacterInformation> CharacterBuffer { get; private set; }
 
         //TODO: Create size structure, instead of
         //Coordination structures
-        public AreaWriter(Coordination position, Coordination size)
+        public AreaWriter(Area area)
         {
-            areaPosition = position;
-            areaSize = size;
-            Rectangle = new(0, 0, size.X, size.Y);
+            bufferArea = area;
+            Rectangle = new(0, 0, bufferArea.Size.X, bufferArea.Size.Y);
 
-            int charactersLength = areaSize.X * areaSize.Y;
+            int charactersLength = bufferArea.Size.X * bufferArea.Size.Y;
             CharacterBuffer = new CharacterInformation[charactersLength];
             fileHandle = InteropHelper.CreateFile(ReadName, ReadHandle, 2, 0, FileMode.Open, 0, 0);
         }
@@ -37,7 +36,7 @@ namespace TeleCommands.NET.API.ConsoleWriter.Writers
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Write(char character, Coordination position, CharacterColor color) 
         {
-            var relativePosition = CalculateRelativePosition(position, areaSize);
+            var relativePosition = CalculateRelativePosition(position, bufferArea.Size);
 
             int currentIndex = relativePosition.Y * relativePosition.X;
             var currentInformation = new CharacterInformation(character, color);
@@ -47,11 +46,11 @@ namespace TeleCommands.NET.API.ConsoleWriter.Writers
         public virtual void Display() 
         {
             var rectangleReference = Rectangle;
-            _ = InteropHelper.WriteConsoleOutputW(fileHandle, CharacterBuffer.ToArray(), areaSize, areaPosition, ref rectangleReference);
+            _ = InteropHelper.WriteConsoleOutputW(fileHandle, CharacterBuffer.ToArray(), bufferArea.Size, bufferArea.Position, ref rectangleReference);
         }
 
         public virtual void Clear() =>
-            CharacterBuffer = new CharacterInformation[areaSize.X * areaSize.Y];
+            CharacterBuffer = new CharacterInformation[bufferArea.Size.X * bufferArea.Size.Y];
 
         private Coordination CalculateRelativePosition(Coordination position, Coordination size) 
         {
