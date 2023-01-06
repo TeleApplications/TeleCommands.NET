@@ -11,17 +11,25 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
 
         public ConsoleColor AreaColor { get; set; }
             = ConsoleColor.Blue;
-        public int MaxCommandCount { get; set; } = 5;
-        public int CurrentIndex { get; }
+        public int MaxCommandCount { get; } = 5;
+        public int CurrentIndex { get; private set; }
 
-        public AutoCompleteHandler(Process process, Area area) : base(process)
+        public AutoCompleteHandler(Process process, Area area, int maxCommandCount) : base(process)
         {
             areaWriter = new AreaWriter(area);
+            maxCommandCount = areaWriter.CalculateRelativePosition(new(0, maxCommandCount), area.Size).Y;
         }
 
-        protected override async Task OnWriteAsync(ReadOnlyMemory<char> data)
+        public override async Task UpdateAsync()
+        {
+            await base.UpdateAsync();
+        }
+
+        protected override Task OnWriteAsync(ReadOnlyMemory<char> data)
         {
             currentAttributes = GetSimilarAttributes(data);
+            CurrentIndex = 0;
+            return Task.CompletedTask;
         }
 
         private ReadOnlyMemory<CommandAttribute> GetSimilarAttributes(ReadOnlyMemory<char> nameData)

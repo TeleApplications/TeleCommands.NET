@@ -52,7 +52,7 @@ namespace TeleCommands.NET.API.ConsoleWriter.Writers
         public virtual void Clear() =>
             CharacterBuffer = new CharacterInformation[bufferArea.Size.X * bufferArea.Size.Y];
 
-        private Coordination CalculateRelativePosition(Coordination position, Coordination size) 
+        public Coordination CalculateRelativePosition(Coordination position, Coordination size) 
         {
             int xDifference = position.X - size.X;
             int yDifference = position.Y - size.Y;
