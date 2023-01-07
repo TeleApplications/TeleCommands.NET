@@ -22,12 +22,12 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
 
         public override async Task UpdateAsync()
         {
-            int squaredIndex = CurrentIndex == 0 ? CurrentIndex : Math.Abs(CurrentIndex) / CurrentIndex;
-            CurrentIndex = (((CurrentIndex - currentAttributes.Length) * (squaredIndex)) / MaxCommandCount);
+            int signValue = CalculateSign(CurrentIndex);
+            int shiftIndex = ((CurrentIndex - currentAttributes.Length) * signValue) / MaxCommandCount;
+
             int commandsLength = MaxCommandCount;
             for (int i = 0; i < commandsLength; i++)
             {
-
             }
 
             await base.UpdateAsync();
@@ -40,6 +40,12 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
             return Task.CompletedTask;
         }
 
+        private int CalculateSign(int value) 
+        {
+            int absValue = Math.Abs(value);
+            int relativeIndex = (1 % (absValue + 1)) ^ 1;
+            return absValue / (value + relativeIndex);
+        }
 
         private ReadOnlyMemory<CommandAttribute> GetSimilarAttributes(ReadOnlyMemory<char> nameData)
         {
