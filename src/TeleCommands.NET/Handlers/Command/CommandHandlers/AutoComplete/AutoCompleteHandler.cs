@@ -22,6 +22,14 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
 
         public override async Task UpdateAsync()
         {
+            int squaredIndex = CurrentIndex == 0 ? CurrentIndex : Math.Abs(CurrentIndex) / CurrentIndex;
+            CurrentIndex = (((CurrentIndex - currentAttributes.Length) * (squaredIndex)) / MaxCommandCount);
+            int commandsLength = MaxCommandCount;
+            for (int i = 0; i < commandsLength; i++)
+            {
+
+            }
+
             await base.UpdateAsync();
         }
 
@@ -31,6 +39,7 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
             CurrentIndex = 0;
             return Task.CompletedTask;
         }
+
 
         private ReadOnlyMemory<CommandAttribute> GetSimilarAttributes(ReadOnlyMemory<char> nameData)
         {
