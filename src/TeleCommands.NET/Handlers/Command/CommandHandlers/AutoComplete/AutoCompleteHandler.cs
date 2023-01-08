@@ -23,7 +23,11 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
         public override async Task UpdateAsync()
         {
             int signValue = CalculateSign(CurrentIndex);
-            int shiftIndex = ((CurrentIndex - currentAttributes.Length) * signValue) / MaxCommandCount;
+            int attributesIndex = (Math.Abs(CurrentIndex) + CurrentIndex) / 2;
+
+            int indexDifference = CurrentIndex - currentAttributes.Length;
+            int shiftIndex = ((Math.Abs(indexDifference) + (indexDifference * signValue)) / 2) / MaxCommandCount;
+            CurrentIndex = (currentAttributes.Length * (attributesIndex ^ shiftIndex)) + indexDifference;
 
             int commandsLength = MaxCommandCount;
             for (int i = 0; i < commandsLength; i++)
