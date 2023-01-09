@@ -23,17 +23,15 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
         public override async Task UpdateAsync()
         {
             int signValue = CalculateSign(CurrentIndex);
-            int attributesIndex = (Math.Abs(CurrentIndex) + CurrentIndex) / 2;
+            int attributesIndex = (Math.Abs(CurrentIndex) + CurrentIndex) >> 1;
 
             int indexDifference = CurrentIndex - currentAttributes.Length;
-            int shiftIndex = ((Math.Abs(indexDifference) + (indexDifference * signValue)) / 2) / MaxCommandCount;
-            CurrentIndex = (currentAttributes.Length * (attributesIndex ^ shiftIndex)) + indexDifference;
+            int shiftIndex = ((Math.Abs(indexDifference) + (indexDifference * signValue)) >> 1) / MaxCommandCount;
 
-            int commandsLength = MaxCommandCount;
-            for (int i = 0; i < commandsLength; i++)
+            CurrentIndex = (currentAttributes.Length * (attributesIndex ^ shiftIndex)) + indexDifference;
+            for (int i = 0; i < MaxCommandCount; i++)
             {
             }
-
             await base.UpdateAsync();
         }
 
@@ -44,6 +42,9 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
             return Task.CompletedTask;
         }
 
+        //I know that this implementation for getting
+        //just a signed value is quite expensive due to
+        //double devide. It will be fixed in a future
         private int CalculateSign(int value) 
         {
             int absValue = Math.Abs(value);
