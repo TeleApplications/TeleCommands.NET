@@ -17,7 +17,7 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
         public AutoCompleteHandler(Process process, Area area, int maxCommandCount) : base(process)
         {
             areaWriter = new AreaWriter(area);
-            maxCommandCount = areaWriter.CalculateRelativePosition(new(0, maxCommandCount), area.Size).Y;
+            MaxCommandCount = areaWriter.CalculateRelativePosition(new(0, maxCommandCount), area.Size).Y;
         }
 
         public override async Task UpdateAsync()
