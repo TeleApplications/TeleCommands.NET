@@ -30,6 +30,22 @@ namespace TeleCommands.NET.API.ConsoleWriter.Writers
             fileHandle = InteropHelper.CreateFile(ReadName, ReadHandle, 2, 0, FileMode.Open, 0, 0);
         }
 
+        public void Write(string text, Coordination position) =>
+            Write(text, position, CharacterColor.DefaultColor);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Write(string text, Coordination position, CharacterColor color) 
+        {
+            int textLength = text.Length;
+            for (int i = 0; i < textLength; i++)
+            {
+                var currentPosition = new Coordination(position.X + 1, position.Y);
+                var currentCharacter = text[i];
+
+                Write(currentCharacter, currentPosition, color);
+            }
+        }
+
         public void Write(char character, Coordination position) =>
             Write(character, position, CharacterColor.DefaultColor);
 

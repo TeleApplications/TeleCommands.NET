@@ -33,6 +33,9 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
             {
                 int relativeIndex = CalculateRelativeIndex(CurrentIndex, currentAttributes.Length);
                 var currentCommand = currentAttributes.Span[relativeIndex];
+
+                //This position is will be changed by current line number
+                areaWriter.Write($"[{i}]: {currentCommand.Name}", new(0, i), new(ConsoleColor.White, AreaColor));
             }
             await base.UpdateAsync();
         }
@@ -53,6 +56,7 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
             }
             return value;
         }
+
         //I know that this implementation for getting
         //just a signed value is quite expensive due to
         //double devide. It will be fixed in a future
