@@ -39,7 +39,7 @@ namespace TeleCommands.NET.API.ConsoleWriter.Writers
             int textLength = text.Length;
             for (int i = 0; i < textLength; i++)
             {
-                var currentPosition = new Coordination(position.X + 1, position.Y);
+                var currentPosition = new Coordination(position.X + i, position.Y);
                 var currentCharacter = text[i];
 
                 Write(currentCharacter, currentPosition, color);
@@ -54,7 +54,7 @@ namespace TeleCommands.NET.API.ConsoleWriter.Writers
         {
             var relativePosition = CalculateRelativePosition(position, bufferArea.Size);
 
-            int currentIndex = relativePosition.Y * relativePosition.X;
+            int currentIndex = (relativePosition.Y + 1) * (relativePosition.X + 1);
             var currentInformation = new CharacterInformation(character, color);
             CharacterBuffer.Span[currentIndex] = currentInformation;
         }

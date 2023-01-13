@@ -12,7 +12,7 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
         public ConsoleColor AreaColor { get; set; }
             = ConsoleColor.Blue;
         public int MaxCommandCount { get; } = 5;
-        public int CurrentIndex { get; private set; }
+        public int CurrentIndex { get; private set; } = 0;
 
         public AutoCompleteHandler(Process process, Area area, int maxCommandCount) : base(process)
         {
@@ -22,6 +22,10 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
 
         public override async Task UpdateAsync()
         {
+            await base.UpdateAsync();
+            if (currentAttributes.Length == 0)
+                return;
+
             int signValue = CalculateSign(CurrentIndex); 
             int attributesIndex = (Math.Abs(CurrentIndex) + CurrentIndex) >> 1;
 
@@ -37,7 +41,6 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
                 //This position is will be changed by current line number
                 areaWriter.Write($"[{i}]: {currentCommand.Name}", new(0, i), new(ConsoleColor.White, AreaColor));
             }
-            await base.UpdateAsync();
         }
 
         protected override Task OnWriteAsync(ReadOnlyMemory<char> data)
@@ -78,7 +81,7 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
             {
                 var currentAttribute = commandAttributes.Span[i];
                 var currentName = currentAttribute.Name[0..(dataLength)].ToCharArray();
-                if (nameData.Equals(currentName)) 
+                if (nameData.Span.StartsWith(currentName))
                 {
                     returnAttributes.Span[currentIndex] = currentAttribute;
                     currentIndex++;
