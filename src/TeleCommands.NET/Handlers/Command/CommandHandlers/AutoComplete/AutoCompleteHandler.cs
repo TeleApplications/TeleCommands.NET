@@ -25,28 +25,31 @@ namespace TeleCommands.NET.Handlers.Command.CommandHandlers.AutoComplete
             await base.UpdateAsync();
             if (currentAttributes.Length == 0)
                 return;
+            areaWriter.Clear();
 
-            int signValue = CalculateSign(CurrentIndex); 
+            int signValue = CalculateSign(CurrentIndex);
             int attributesIndex = (Math.Abs(CurrentIndex) + CurrentIndex) >> 1;
 
             int indexDifference = CurrentIndex - currentAttributes.Length;
             int shiftIndex = ((Math.Abs(indexDifference) + (indexDifference * signValue)) >> 1) / MaxCommandCount;
 
             CurrentIndex = (currentAttributes.Length * (attributesIndex ^ shiftIndex)) + indexDifference;
-            for (int i = 0; i < MaxCommandCount; i++)
+            int currentLength = currentAttributes.Length < MaxCommandCount ? currentAttributes.Length : MaxCommandCount;
+            for (int i = 0; i < currentLength; i++)
             {
-                int relativeIndex = CalculateRelativeIndex(CurrentIndex, currentAttributes.Length);
+                int relativeIndex = CalculateRelativeIndex(CurrentIndex, currentAttributes.Length) - 1;
                 var currentCommand = currentAttributes.Span[relativeIndex];
 
                 //This position is will be changed by current line number
                 areaWriter.Write($"[{i}]: {currentCommand.Name}", new(0, i), new(ConsoleColor.White, AreaColor));
             }
+            areaWriter.Display();
         }
 
         protected override Task OnWriteAsync(ReadOnlyMemory<char> data)
         {
             currentAttributes = GetSimilarAttributes(data);
-            CurrentIndex = 0;
+            CurrentIndex = 1;
             return Task.CompletedTask;
         }
 
